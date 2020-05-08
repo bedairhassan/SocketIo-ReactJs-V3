@@ -32,13 +32,14 @@ export default function UserData({socket}) {
             <tr>
               <th style={{fontSize: '10px'}}>socket id</th>
               <th style={{fontSize: '10px'}}>Who Can Send Him Friendrequest?</th>
+              <th style={{fontSize: '10px'}}>Sent You a Friend Request</th>
             </tr>
             {
                 users.map(user=>user.socketid!==socket.id&&<tr style={{fontSize: '10px'}}>
                   {/* <button onClick={()=>console.log(`hi`,user.socketid,user.whocansendmefr)}>hi</button> */}
                   <td>{user.socketid}</td>
 
-                  {/* TODO: Display He is Your Friend when necessary */}
+                  {/* TODO: Display He is Your Friend when necessary. And Private Button */}
                   <td>{user.whocansendmefr===`everyone` && <button onClick={()=>console.log(`whatever`)}>Add Me As A Friend</button>}</td> </tr>
                   )
             }
