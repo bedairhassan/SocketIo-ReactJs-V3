@@ -32,10 +32,14 @@ io.on('connection', (socket) => {
 
     // socket.on // 
 
-    // TODO: receives array of people to send data to
-
     // 
     socket.on(`chat`,user=>io.emit(`chat`,{...user,date:new Date()})) // message inside user
+
+    // attempt to send friend request
+    // socket.broadcast.to(data.broadcastTo).emit( 'delete-friendlist-at-target', data.who )
+    // src, target : r both socketids
+    // this is just a traversing path
+    socket.on(`fr`,({src,target})=>socket.broadcast.to(target).emit(`fr`,{src}))
 
     //
     socket.on(`update user`,user=>{
@@ -52,5 +56,23 @@ io.on('connection', (socket) => {
         }
 
         io.emit(`update user`,users)
+    })
+
+    // 
+    socket.on(`disconnect`,()=>{
+
+        console.log(`before disconnecting, total number of users is `,users.length)
+        for (let i=0;i<users.length;i++){
+            console.log({list:users[i].socketid,current:socket.id})
+            if(users[i].socketid===socket.id){
+                console.log(users[i])
+                users.splice(i,1)
+                break;
+            }
+        }
+        console.log(`after disconnecting, total number of users is `,users.length)
+
+        io.emit(`Available Users`,users)
+        socket.disconnect()
     })
 });

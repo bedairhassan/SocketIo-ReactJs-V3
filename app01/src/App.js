@@ -16,6 +16,8 @@ function App() {
 
   const [toDisplay,toDisplaySet]=useState(`Home`)
 
+  useEffect(()=>  window.addEventListener('beforeunload', e=>socket.emit(`disconnect`,{socketid:socket.id})),[])
+
   return (
     <center>
 

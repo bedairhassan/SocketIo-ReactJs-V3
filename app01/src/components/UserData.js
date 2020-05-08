@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { mysocketid } from '../utils/events'
 import Select from '../components/reusable/Select'
 
-function UserData({ socket }) {
+export default function UserData({ socket }) {
 
   const [user, userSet] = useState({ socketid: -1, whocansendmefr: `everyone` })
 
@@ -37,4 +37,4 @@ function UserData({ socket }) {
   )
 }
 
-export default UserData
+// export default UserData

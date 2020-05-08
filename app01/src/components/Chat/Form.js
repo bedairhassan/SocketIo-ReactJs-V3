@@ -16,7 +16,7 @@ function Form({socket}) {
             socket={socket}
             event={`chat`}
             buttonName={`Broadcast Message`}
-            data={{socketid:socket.id,message}}/>
+            data={{socketid:socket.id,message,isPrivate:false,isFriendRequest:`not yet`}}/>
         </React.Fragment>    
     )
 }
