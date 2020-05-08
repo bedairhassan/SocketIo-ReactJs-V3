@@ -45,6 +45,7 @@ export default function Table({ socket }) {
           <th style={{ fontSize: '10px' }}>date</th>
           <th style={{ fontSize: '10px' }}>socket id
           <br />
+          Please select an option
             <Select onClick={(e) => selectSet(e)} data={SocketIdsDynamic(users)} />
           </th>
           <th style={{ fontSize: '10px' }}>message</th>

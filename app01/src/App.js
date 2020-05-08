@@ -23,14 +23,23 @@ function App() {
 
       {/* {true&&true&&<h1>hi</h1>} */}
 
+      <div className={`sidenav`}>
       <UserData socket={socket}/>
       <hr className="zig-zag"></hr>
-      <Chat socket={socket}/>
-      <hr className="zig-zag"></hr>
-      <h1>Conclusion</h1>
-      <h2 style={{ fontSize: '10px' }}>Yourself can't be seen in this table</h2>
-      <br/>
+      <h1 style={{ fontSize: '10px' }}>Conclusion, Yourself can't be seen in this table</h1>
+      <h1 style={{ fontSize: '10px' , color:`red`}}>AVAILABLE USERS</h1>
       <AvailableUsers socket={socket}/>
+      </div>
+
+      <div className={`main`}>
+      <Chat socket={socket}/>
+      </div>
+
+      {/* <hr className="zig-zag"></hr> */}
+      
+      {/* <h2 style={{ fontSize: '10px' }}></h2> */}
+      <br/>
+      
       
       
     </center>

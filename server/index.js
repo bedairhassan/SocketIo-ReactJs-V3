@@ -33,7 +33,12 @@ io.on('connection', (socket) => {
     // socket.on // 
 
     // 
-    socket.on(`chat`,user=>io.emit(`chat`,{...user,date:new Date()})) // message inside user
+    socket.on(`chat`,user=>{
+        
+        console.log(new Date())
+        console.log(`socket.on chat`,user)
+
+        io.emit(`chat`,{...user,date:new Date()})}) // message inside user
 
     // attempt to send friend request
     // socket.broadcast.to(data.broadcastTo).emit( 'delete-friendlist-at-target', data.who )
@@ -46,6 +51,8 @@ io.on('connection', (socket) => {
 
         console.log(new Date())
         console.log(`update user`)
+
+        // filter,extract i // modify[0] // replace, use i //
         for (let i=0;i<users.length;i++){
 
             if(users[i].socketid===user.socketid){
@@ -63,9 +70,9 @@ io.on('connection', (socket) => {
 
         console.log(`before disconnecting, total number of users is `,users.length)
         for (let i=0;i<users.length;i++){
-            console.log({list:users[i].socketid,current:socket.id})
+            // console.log({list:users[i].socketid,current:socket.id})
             if(users[i].socketid===socket.id){
-                console.log(users[i])
+                // console.log(users[i])
                 users.splice(i,1)
                 break;
             }
