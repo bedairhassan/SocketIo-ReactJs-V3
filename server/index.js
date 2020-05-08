@@ -32,6 +32,8 @@ io.on('connection', (socket) => {
 
     // socket.on // 
 
+    // TODO: receives array of people to send data to
+
     // 
     socket.on(`chat`,user=>io.emit(`chat`,{...user,date:new Date()})) // message inside user
 

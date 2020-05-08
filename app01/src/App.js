@@ -18,10 +18,16 @@ function App() {
 
   return (
     <center>
+
+      {/* {true&&true&&<h1>hi</h1>} */}
+
       <UserData socket={socket}/>
       <hr className="zig-zag"></hr>
       <Chat socket={socket}/>
       <hr className="zig-zag"></hr>
+      <h1>Conclusion</h1>
+      <h2 style={{ fontSize: '10px' }}>Yourself can't be seen in this table</h2>
+      <br/>
       <AvailableUsers socket={socket}/>
       
       

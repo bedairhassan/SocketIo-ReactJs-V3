@@ -34,7 +34,7 @@ export default function UserData({socket}) {
               <th style={{fontSize: '10px'}}>Who Can Send Him Friendrequest?</th>
             </tr>
             {
-                users.map(user=><tr style={{fontSize: '10px'}}>
+                users.map(user=>user.socketid!==socket.id&&<tr style={{fontSize: '10px'}}>
                   {/* <button onClick={()=>console.log(`hi`,user.socketid,user.whocansendmefr)}>hi</button> */}
                   <td>{user.socketid}</td>
 
