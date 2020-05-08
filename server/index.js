@@ -15,7 +15,7 @@ var server = app.listen(4000, function(){
 // app.use(express.static('public'));
 
 // Server Variables
-var users=[] // {socketid}
+var users=[] // {socketid,whocansendmefr}
 
 // Socket setup & pass server
 var io = socket(server);
@@ -24,9 +24,31 @@ io.on('connection', (socket) => {
     // `base code` : for each introduced socket, we will consider doing the following
     console.log(new Date())
     console.log(`New Socket Id has been introduced`,socket.id)
-    users.push({socketid:socket.id})
+    users.push({socketid:socket.id,whocansendmefr:`everyone`})
     
     // `base code` : notification
     socket.emit(`what is my socketid`,socket.id)
     io.emit(`Available Users`,users)
+
+    // socket.on // 
+
+    // 
+    socket.on(`chat`,user=>io.emit(`chat`,{...user,date:new Date()})) // message inside user
+
+    //
+    socket.on(`update user`,user=>{
+
+        console.log(new Date())
+        console.log(`update user`)
+        for (let i=0;i<users.length;i++){
+
+            if(users[i].socketid===user.socketid){
+                console.log(user)
+                users[i]={...user}
+                break;
+            }
+        }
+
+        io.emit(`update user`,users)
+    })
 });

@@ -2,9 +2,17 @@ import React,{useState,useEffect} from 'react'
 
 import {availableusers} from '../utils/events'
 
-function UserData({socket}) {
+export default function UserData({socket}) {
 
     const [users,usersSet]=useState([])
+
+    useEffect(()=>{
+  
+      console.log(new Date())
+      console.log(`useEffect for update user`)
+      socket.on(`update user`,usersReturn=>usersSet([...usersReturn]))
+  
+    },[])
 
     useEffect(()=>{
   
@@ -20,13 +28,21 @@ function UserData({socket}) {
 
     return (
         <center>
-            <ul>
+            <table>
+            <tr>
+              <th style={{fontSize: '10px'}}>socket id</th>
+              <th style={{fontSize: '10px'}}>Who Can Send Him Friendrequest?</th>
+            </tr>
             {
-                users.map(user=><li style={{fontSize: '10px'}}>{user.socketid}</li>)
+                users.map(user=><tr style={{fontSize: '10px'}}>
+                  {/* <button onClick={()=>console.log(`hi`,user.socketid,user.whocansendmefr)}>hi</button> */}
+                  <td>{user.socketid}</td>
+
+                  {/* TODO: Display He is Your Friend when necessary */}
+                  <td>{user.whocansendmefr===`everyone` && <button onClick={()=>console.log(`whatever`)}>Add Me As A Friend</button>}</td> </tr>
+                  )
             }
-            </ul>
+            </table>
         </center>
     )
 }
-
-export default UserData
