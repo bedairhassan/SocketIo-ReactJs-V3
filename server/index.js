@@ -12,16 +12,21 @@ var server = app.listen(4000, function(){
 });
 
 // Static files
-app.use(express.static('public'));
+// app.use(express.static('public'));
+
+// Server Variables
+var users=[] // {socketid}
 
 // Socket setup & pass server
 var io = socket(server);
 io.on('connection', (socket) => {
 
-    // base code
+    // `base code` : for each introduced socket, we will consider doing the following
     console.log(new Date())
     console.log(`New Socket Id has been introduced`,socket.id)
-
+    users.push({socketid:socket.id})
+    
+    // `base code` : notification
     socket.emit(`what is my socketid`,socket.id)
-
+    io.emit(`Available Users`,users)
 });
