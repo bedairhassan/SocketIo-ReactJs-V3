@@ -7,7 +7,7 @@ var socket = require('socket.io');
 
 // App setup
 var app = express();
-var server = app.listen(4000, function(){
+var server = app.listen(4000, function () {
     console.log('listening for requests on port 4000,');
 });
 
@@ -15,71 +15,75 @@ var server = app.listen(4000, function(){
 // app.use(express.static('public'));
 
 // Server Variables
-var users=[] // {socketid,whocansendmefr}
+var users = [] // {socketid,whocansendmefr}
 
 // Socket setup & pass server
 var io = socket(server);
 io.on('connection', (socket) => {
 
-    // `base code` : for each introduced socket, we will consider doing the following
-    console.log(new Date())
-    console.log(`New Socket Id has been introduced`,socket.id)
-    users.push({socketid:socket.id,whocansendmefr:`everyone`})
-    
-    // `base code` : notification
-    socket.emit(`what is my socketid`,socket.id)
-    io.emit(`Available Users`,users)
+    const obj = { socketid: socket.id, whocansendmefr: `everyone`,isFrRec:false }
+    console.log(new Date(), `users.push`, obj)
+    users.push(obj)
+    console.log("users", users)
+
+    console.log(new Date(), `what is my socketid`, socket.id)
+    socket.emit(`what is my socketid`, socket.id)
+
+    console.log(new Date(), `Available Users`, users)
+    io.emit(`Available Users`, users)
 
     // socket.on // 
 
-    // 
-    socket.on(`chat`,user=>{
-        
-        console.log(new Date())
-        console.log(`socket.on chat`,user)
+    socket.on(`chat`, user => {
 
-        io.emit(`chat`,{...user,date:new Date()})}) // message inside user
+        console.log(new Date(), `chat`, { ...user, date: new Date() })
+        io.emit(`chat`, { ...user, date: new Date() })
+    }) // message inside user
 
-    // attempt to send friend request
-    // socket.broadcast.to(data.broadcastTo).emit( 'delete-friendlist-at-target', data.who )
-    // src, target : r both socketids
-    // this is just a traversing path
-    socket.on(`fr`,({src,target})=>socket.broadcast.to(target).emit(`fr`,{src}))
+    socket.on(`fr`, ({ src, target }) => {
+
+        console.log(new Date(), `fr`, `${src, target}`)
+        socket.broadcast.to(target).emit(`fr`, { src })
+    })
 
     //
-    socket.on(`update user`,user=>{
+    socket.on(`update user`, user => {
 
-        console.log(new Date())
-        console.log(`update user`)
+        console.log(new Date(), `update user`, user)
 
         // filter,extract i // modify[0] // replace, use i //
-        for (let i=0;i<users.length;i++){
+        for (let i = 0; i < users.length; i++) {
 
-            if(users[i].socketid===user.socketid){
+            if (users[i].socketid === user.socketid) {
                 console.log(user)
-                users[i]={...user}
+                users[i] = { ...user }
                 break;
             }
         }
 
-        io.emit(`update user`,users)
+        console.log(`io.emit`, `update user`, users)
+        io.emit(`update user`, users)
     })
 
     // 
-    socket.on(`disconnect`,()=>{
+    socket.on(`disconnect`, () => {
 
-        console.log(`before disconnecting, total number of users is `,users.length)
-        for (let i=0;i<users.length;i++){
-            // console.log({list:users[i].socketid,current:socket.id})
-            if(users[i].socketid===socket.id){
+        var disconnectt = { beforeDisconnect: users.length }
+        for (let i = 0; i < users.length; i++) {
+
+            if (users[i].socketid === socket.id) {
                 // console.log(users[i])
-                users.splice(i,1)
+                users.splice(i, 1)
                 break;
             }
         }
-        console.log(`after disconnecting, total number of users is `,users.length)
+        disconnectt = { ...disconnectt, afterDisconnect: users.length }
 
-        io.emit(`Available Users`,users)
+        console.log(new Date(), `io.emit`, users)
+        io.emit(`Available Users`, users)
         socket.disconnect()
     })
 });
+
+// write comment here to restart server
+// 

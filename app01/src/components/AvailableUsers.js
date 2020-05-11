@@ -1,104 +1,102 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import '../App.css';
+function AvailableUsers({ socket }) {
 
-import { availableusers } from '../utils/events'
+    const [users, usersSet] = useState([])
+    const [isUsersUpdated,isUsersUpdatedSet]=useState(false)
 
-{/* TODO: Display He is Your Friend when necessary. And Private Button */ }
+    const UpdateUserFun = ()=>{
 
+        socket.on(`update user`, users => {
 
-export default function AvailableUsers({ socket }) {
+            usersSet(users)
+            console.log(new Date(), `update user`, users)
+        })
+        isUsersUpdatedSet(!isUsersUpdated)
+    }
 
-  const [users, usersSet] = useState([])
+    const AvailableUsersFun = () => { //  TODO: delete this.
 
+        // var users = [];
 
-  useEffect(() => {
+        
 
-    console.log(`%c${new Date()}`, 'color:red')
-    console.log(`useEffect for update user`)
-    socket.on(`update user`, users => {
+        socket.on(`Available Users`, users => {
 
-      console.log(`%c${new Date()}`, 'color:red')
-      console.log(`update user, printing usersReturn`)
-      console.log(users)
-      usersSet(users)
-    })
+            usersSet(users)
+            console.log(new Date(), `Available Users`, users)
 
-  }, [])
+            isUsersUpdatedSet(!isUsersUpdated)
+        })
 
-  // useEffect for fr
-  // hint: use 
-  useEffect(() => socket.on(`fr`, ({ src }) => {
+        // users = [{socketid:11212},{socketid:12121212}]
+        // usersSet([...users])
+        // usersSet(users)
 
-    console.log(`%c${new Date()}`, 'color:red')
-    console.log(`fr: `, src)
-    console.log(users.length)
+        // return 
+    }
 
+    useEffect(AvailableUsersFun, [])
+    useEffect(UpdateUserFun, [])
 
+    const receivedFriendReq = () => {
 
-    // let edit = [...users]
-    // for (let i = 0; i < users.length; i++) {
-    //   console.log({ src: src, list: users[i].socketid })
-    //   if (users[i].socketid === src) {
-    //     // users[i].isFriendRequest = true
-    //     users[i] = {...users[i],isFriendRequest:src}
-    //     return
-    //   }
-    // }
+        console.log(`${new Date()}, receivedFriendReq, ${buttonClicked}`)
+        console.log(new Date(),`received frq, let's display array`,users)
+        
+        var FINALLY=false;
+        console.log(new Date(),`FIRST: finally`,{FINALLY})
+        socket.on(`fr`,({src})=>{
+            
+            console.log(new Date(),`fr`,{src},`would like to send you a friend request`)
+            FINALLY=true
+            console.log(new Date(),`SECOND: finally`,{FINALLY})
+        })
 
-    // usersSet(edit)
-  }), [])
+        console.log(new Date(),`THIRD: finally`,{FINALLY})
+        if(FINALLY){
 
-  useEffect(() => {
+            console.log(new Date(),`FIRST: finally`,{FINALLY})
+            console.log(new Date(),`AFTER FINALLY received frq, let's display array`,users)
+        }
+    }
 
-    // console.log(`%c${new Date()}`,'color:red')
-    // console.log(new Date(),`color:red;`)
-    socket.on(availableusers, users => {
+    const [buttonClicked, buttonClickedSet] = useState(false)
+    useEffect(receivedFriendReq, [isUsersUpdated,buttonClicked])
 
-      console.log(`%c${new Date()}`, 'color:red')
-      console.log(`useEffect for Available Users`)
-      usersSet(users)
-    })
+    return (
+        <React.Fragment>
 
-  }, [])
+            <table>
+                <thead style={{ fontSize: '10px' }}>
+                    <th>socketid</th>
+                    <th>who can fr</th>
+                    <th>isFriendRequestReceived</th>
+                    {/* <th>header2</th> */}
+                </thead>
+                <tbody>
+                    {
+                        users.map(({ socketid, whocansendmefr,isFrRec }) => (socketid !== socket.id) && <tr style={{ fontSize: '10px' }}>
 
-  const AddMeAsAFriend = ({socketid}) => {
+                            <td>{socketid}</td>
+                            <td>{whocansendmefr === `everyone` && <button onClick={() => {
 
-    console.log(`%c${new Date()}`, 'color:red')
-    console.log(`whocansendmefr`)
-    console.log({ src: socket.id, target: socketid })
-    socket.emit(`fr`, { src: socket.id, target: socketid })
-  }
+                                const obj = { src: socket.id, target: socketid }
+                                buttonClickedSet(!buttonClicked)
+                                console.log(new Date(), `fr`, obj)
+                                socket.emit(`fr`, obj)
+                            }}>add</button>}</td>
 
-  return (
-    <center>
-      <table>
-        <thead>
-          <tr >
-            <th style={{ fontSize: '10px' }}>socket id</th>
-            <th style={{ fontSize: '10px' }}>Who Can Send Him Friendrequest?</th>
-            <th style={{ fontSize: '10px' }}>Sent You a Friend Request</th>
-            <th style={{ fontSize: '10px' }}>IsFriends</th> {/* contact button appears */}
-          </tr>
-        </thead>
-        <tbody>
-          {
-            users.map(({socketid,whocansendmefr,isFriendRequest}) => socketid !== socket.id && <tr style={{ fontSize: '10px' }} key={socketid + `${new Date()}`}>
+                            <td>{isFrRec+` `}</td>
 
-              <td>{socketid}</td>
+                        </tr>)
+                    }
+                </tbody>
 
-              <td>{
-                whocansendmefr === `everyone` 
-                &&
-                <button onClick={() => AddMeAsAFriend({socketid})}>Add Me As A Friend</button>}</td>
+            </table>
 
-              <td>{isFriendRequest}</td>
-
-            </tr>
-            )
-          }
-        </tbody>
-      </table>
-    </center>
-  )
+        </React.Fragment>
+    )
 }
+
+export default AvailableUsers

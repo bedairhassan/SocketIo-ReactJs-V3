@@ -12,8 +12,9 @@ export default function UserData({ socket }) {
 
   useEffect(() => {
 
-    console.log(`%c${new Date()}`,'color:red')
-    console.log(`useEffect for mysocketid`)
+    console.log(new Date(),`useEffect, mysocketid`,socket.id)
+    // console.log(`%c${new Date()}`,'color:red')
+    // console.log(`useEffect for mysocketid`)
     socket.on(mysocketid, socketid => {
 
       console.log(socketid)
