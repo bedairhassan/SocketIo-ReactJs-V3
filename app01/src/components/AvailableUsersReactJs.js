@@ -120,7 +120,7 @@ export default class AvailableUsersReactJs extends React.Component {
                             this.state.users.map(({ socketid, whocansendmefr, isFrRec,isFriends }) => (socketid !== this.state.socket.id) && <tr style={{ fontSize: '10px' }}>
 
                                 <td>{socketid}</td>
-                                <td>{whocansendmefr === `everyone` && <button onClick={() => {
+                                <td>{whocansendmefr === `everyone` && !isFrRec && !isFriends && <button onClick={() => {
 
                                     const obj = { src: this.state.socket.id, target: socketid }
                                     // buttonClickedSet(!buttonClicked)
@@ -128,7 +128,9 @@ export default class AvailableUsersReactJs extends React.Component {
                                     this.state.socket.emit(`fr`, obj)
                                 }}>add</button>}</td>
 
-                                <td>{isFrRec && <button onClick={() => {
+                                <td>{isFrRec && whocansendmefr===`everyone` && !isFriends && <button onClick={() => {
+
+                                    
 
                                     console.table(`letsBeFriends`, { target: socketid, src:this.state.socket.id }) // row record
 
