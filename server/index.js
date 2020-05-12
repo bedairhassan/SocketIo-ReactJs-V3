@@ -46,6 +46,21 @@ io.on('connection', (socket) => {
         socket.broadcast.to(target).emit(`fr`, { src })
     })
 
+socket.on(`Contacting`,target=>socket.emit(`Contacting`,target))
+
+    socket.on(`letsBeFriends`,({target,src})=>{
+
+// hahaha, forgot to update server
+socket.broadcast.to(target).emit(`letsBeFriends`,{src})
+
+        // for src and target, what should we exactly do? 
+        // do we permanently save who's who friend at server
+        // is it necessary? 
+        // or do we just update variables at both clients?
+
+        // I choose B:  update variables at both clients.
+    })
+
     //
     socket.on(`update user`, user => {
 
