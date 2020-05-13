@@ -5,6 +5,8 @@ import Input from '../reusable/Input'
 // input field, button
 function Form({socket}) {
     
+
+    
     const [message,messageSet]=useState(`message does not exist`)
 
     return (

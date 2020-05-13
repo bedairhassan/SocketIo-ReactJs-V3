@@ -5,7 +5,7 @@ import Select from '../components/reusable/Select'
 
 // import '
 import '../../src/App.css';
-import Contacting from '../Contacting'
+import Contacting from '../components/Contacting'
 
 function WhoCanSendMeFr({ socket, onClick, userPrev }) {
 
@@ -64,11 +64,11 @@ export default function UserData({ socket }) {
         </thead>
         <tbody>
 
-          <button onClick={() => {
+          {/* <button onClick={() => {
 
             console.log(new Date(), `let's print user object`)
             console.table(user)
-          }}>hiiiiiiiiiiiiiiiiiii</button>
+          }}>hiiiiiiiiiiiiiiiiiii</button> */}
 
           <DisplayMySocket
             socket={socket}
@@ -80,7 +80,7 @@ export default function UserData({ socket }) {
             onClick={(whocansendmefr) => userSet({ ...user, whocansendmefr })} /> */}
 
           <tr>
-            <td>Who can send me friend request?</td>
+            <td>Who can send me friend request? and bug: who can contact me this second</td>
             <td>
               <Select
                 data={[`everyone`, `nobody`]}
