@@ -13,7 +13,7 @@ export default class AvailableUsersReactJs extends React.Component {
 
         this.state = {
 
-            socket,
+            socket:props.socket, // recent edit
             users: [],
         }
     }
@@ -21,7 +21,7 @@ export default class AvailableUsersReactJs extends React.Component {
     // const [users, usersSet] = useState([])
     // const [isUsersUpdated,isUsersUpdatedSet]=useState(false)
 
-    componentDidMount() {
+    componentDidMount() { // not component did update
 
         this.state.socket.on(`Available Users`, users => {
 

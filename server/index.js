@@ -36,9 +36,18 @@ io.on('connection', (socket) => {
 
     socket.on(`chat`, user => {
 
-        console.log(new Date(), `chat`, { ...user, date: new Date() })
-        io.emit(`chat`, { ...user, date: new Date() })
+        // how about u ... 
+        // DO NOT REMOVE DATE, because clients d....
+        // or shall I remove date?
+        console.log(new Date(), `chat`, user)
+        io.emit(`chat`, user)
     }) // message inside user
+
+    socket.on(`chat2`,user=>{
+
+        console.log(new Date(),`chat2`,user)
+        socket.broadcast.to(user.target).emit(`chat2`, user)
+    })
 
     socket.on(`fr`, ({ src, target }) => {
 
