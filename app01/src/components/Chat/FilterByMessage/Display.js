@@ -6,16 +6,16 @@ function Display({ data,targetMessage }) {
     // actually, made it like this so another programmer won't make it reusable.
     useEffect(()=>{
 
-        if(targetMessage===-1){
-            filteredSet(data)
-        }
+        // if(targetMessage===-1){
+        //     filteredSet(data)
+        // }
 
-        console.log(new Date(),`FilterByMessage, before filtering`,data)
+        // console.log(new Date(),`FilterByMessage, before filtering`,data)
         
         var filterIt = data.filter(({message})=>message===targetMessage)
         filteredSet([...filterIt])
 
-        console.log(new Date(),`FilterByMessage, after filtering`,filtered)
+        // console.log(new Date(),`FilterByMessage, after filtering`,filtered)
 
     },[targetMessage]) // [targetMessage]
 

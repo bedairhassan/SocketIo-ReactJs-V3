@@ -7,6 +7,7 @@ import AvailableUsersReactJs from './components/AvailableUsersReactJs';
 import NavDisplay from './components/NavDisplay';
 
 import Chat from './components/Chat/Chat'
+import ChatWindowPrivate from './components/ChatWindowPrivate/ChatWindowPrivate'
 
 var socket = require('socket.io-client')('http://localhost:4000');
 
@@ -36,6 +37,13 @@ export default function App() {
 
       <div className={`main`}>
         <Chat socket={socket} />
+        <br/>
+        <hr></hr>
+        <hr></hr>
+        
+        {/* FIX Friend Request Sent Issue First */}
+        {/* <ChatWindowPrivate socket={socket}/> */} 
+
       </div>
 
       <br />

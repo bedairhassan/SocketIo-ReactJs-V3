@@ -13,7 +13,7 @@ function Form({ socket }) {
 
         socket.on(`Contacting`, target => {
 
-            console.log(new Date(), `[Form] Contacting`, target)
+       //     console.log(new Date(), `[Form] Contacting`, target)
             // console.table({ target })
 
             contactingStateSet(target)

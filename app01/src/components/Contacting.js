@@ -31,16 +31,7 @@ export default function Contacting({ socket }) {
 
         <td><button onClick={()=>contactingStateSet(-1)}>Contact Everyone</button></td>
   
-        {/* <td>{
-          contactingState === -1 ? <button onClick={() => { 
-            
-            console.log(new Date(), `Everyone Contact`,contactingState) 
-          
-          }} > Everyone </button> : <button onClick={() => {
-            console.log(new Date(), `Private Contact`,contactingStateSet);
-            // console.table({ contactingState })
-          }} > Private </button>
-        }</td> */}
+        
   
   </tr>
   

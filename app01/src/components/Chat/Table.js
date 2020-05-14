@@ -16,7 +16,7 @@ export default class Table extends React.Component {
     super(props)
 
     const { socket } = props
-    console.log(`constructor, `, props.socket.id)
+   // console.log(`constructor, `, props.socket.id)
 
     this.state = {
 
@@ -43,23 +43,23 @@ export default class Table extends React.Component {
 
     this.state.socket.on(`chat`, user => {
 
-      console.log(new Date(), {
+      //console.log(new Date(), {
 
-        fileName: `Table`,
-        event: `chat`,
-        action: `object`,
-        data: user
-      })
+      //   fileName: `Table`,
+      //   event: `chat`,
+      //   action: `object`,
+      //   data: user
+      // })
 
       user = { ...user, date: new Date() + `` }
 
-      console.log(new Date(), {
+      //console.log(new Date(), {
 
-        fileName: `Table`,
-        event: `chat, updated object`,
-        action: `object`,
-        data: user
-      })
+      //   fileName: `Table`,
+      //   event: `chat, updated object`,
+      //   action: `object`,
+      //   data: user
+      // })
 
 
       // usersSet(oldUsers => [...oldUsers, user])
@@ -69,13 +69,13 @@ export default class Table extends React.Component {
 
     this.state.socket.on(`chat2`, user => {
 
-      console.log(new Date(), {
+      //console.log(new Date(), {
 
-        fileName: `Table`,
-        event: `chat2`,
-        action: `object`,
-        data: user
-      })
+      //   fileName: `Table`,
+      //   event: `chat2`,
+      //   action: `object`,
+      //   data: user
+      // })
 
       user = { ...user, date: new Date() + `` }
       // 

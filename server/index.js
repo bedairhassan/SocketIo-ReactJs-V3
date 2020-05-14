@@ -21,7 +21,7 @@ var users = [] // {socketid,whocansendmefr}
 var io = socket(server);
 io.on('connection', (socket) => {
 
-    const obj = { socketid: socket.id, whocansendmefr: `everyone`,isFrRec:false }
+    const obj = { socketid: socket.id, whocansendmefr: `everyone`, SentMe:'-' }
     console.log(new Date(), `users.push`, obj)
     users.push(obj)
     console.log("users", users)
@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
     socket.on(`fr`, ({ src, target }) => {
 
         console.log(new Date(), `fr`, `${src, target}`)
-        socket.broadcast.to(target).emit(`fr`, { src })
+        socket.broadcast.to(target).emit(`fr`, { src,target })
     })
 
 socket.on(`Contacting`,target=>socket.emit(`Contacting`,target))

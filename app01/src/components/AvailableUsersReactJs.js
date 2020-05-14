@@ -1,181 +1,201 @@
-// TODO: remove all comments.
+import React, { PureComponent } from 'react'
 
-import React, { useEffect, useState } from 'react'
-
-export default class AvailableUsersReactJs extends React.Component {
-
+class AvailableUsersReactJs extends PureComponent {
     constructor(props) {
-
         super(props)
 
-        const { socket } = props
-        console.log(`constructor, `, props.socket.id)
-
         this.state = {
-
-            socket:props.socket, // recent edit
-            users: [],
+            socket: props.socket,
+            users: []
         }
     }
 
-    // const [users, usersSet] = useState([])
-    // const [isUsersUpdated,isUsersUpdatedSet]=useState(false)
+    componentDidMount() {
 
-    componentDidMount() { // not component did update
+        // target is me since I am listening for requests
+        // use src variable
+        this.state.socket.on(`letsBeFriends`,({target,src})=>{
 
-        this.state.socket.on(`Available Users`, users => {
+            // src ==> setisFriendstottrue
 
-            // usersSet(users)
-            console.log(new Date(), `Available Users`, users)
-            this.setState({ users: users })
-            console.log(new Date(), `Available Users`, this.state.users)
+            let copy = [...this.state.users]
 
-            // isUsersUpdatedSet(!isUsersUpdated)
-        })
+            for (let i=0;i<copy.length;i++){
 
-        this.state.socket.on(`letsBeFriends`, ({ src }) => {
+                if(copy[i].socketid===src){
 
-// FIXED ! - guest is not defined. 
-// if already friends ! - we need to disallow sending friend requests!
-// but how come if isFriends is a dynamic attribute which appears later in code !
-
-            // so guest is undefined for some reason.
-            // let's modify client array and concatenate attribute isFriends!
-            // isFriends attribute is irrelevant to server !!!!
-
-            let users = [...this.state.users]
-
-            let tmpDISPLAYTABLE = []
-            for (let i = 0; i < users.length; i++) {
-
-
-                tmpDISPLAYTABLE.push({source:users[i].socketid,guest:src})
-                if (users[i].socketid === src) {
-
-                    users[i] = { ...users[i], isFriends: true }
-                    console.log(new Date())
-                    console.table(users[i]) // later try : console.table(new Date(),tmp[i])
-
-                    break;
+                    copy[i] = { ...copy[i], isFriends: true }
                 }
             }
 
-            console.log(new Date(),`tmpDisplayTable`)
-            console.table(tmpDISPLAYTABLE)
+            // render
+            this.setState({users:[...copy]})
+        })
 
+        this.state.socket.on(`Available Users`, users => {
+
+            console.table(users)
             this.setState({ users })
+
         })
 
         this.state.socket.on(`update user`, users => {
 
             this.setState({ users: users })
-            console.log(new Date(), `update user`, this.state.users)
+            console.table(users)
         })
 
-        this.state.socket.on(`fr`, ({ src }) => { // src is socketid
+        // currently, I am the target
+        this.state.socket.on(`fr`, ({ src, target }) => {
 
-            console.log(new Date(), `fr`, { src }, `would like to send you a friend request`)
+            var copy = [...this.state.users]
 
-            // 1. take copy of users 2. modify object of attr: isFrRec to true
-            // var copy = {}
-            // console.table(new Date(),`copy`,copy)
-            // console.table(copy)
+            // cycle through array
+            for (let i = 0; i < copy.length; i++) {
 
-            // TODO: replace this with clean code... 
-            // .filter
-            // obj = {...obj,isFrRec:true}
-            // this.state.socket.emit(`update user`,obj)
-            for (let i = 0; i < this.state.users.length; i++) {
-                if (this.state.users[i].socketid === src) {
+                // search for src
+                if (copy[i].socketid === src) {
 
-                    // copy =  // object.modified=true
-                    this.state.socket.emit(`update user`, { ...this.state.users[i], isFrRec: true }) // if emitted object's socketid is as same as object in server's array's object's socketid, proceed to replace
-                    // console.table(new Date(),`copy`,copy)
+                    console.log(new Date(), `founding src`)
+
+                    // implementation
+                    copy[i] = { ...copy[i], SentMe: target }
+
+                    console.table(copy[i])
+
+                    // if found, break
                     break;
                 }
             }
 
-            // console.table(copy)
-            // this.setState({users:[...copy]})
-            // socket.emit(`Available Users`,)
+            // render
+            this.setState({ users: [...copy] })
         })
     }
 
+    userDisplay(user) {
+
+        // console.log(user.socketid)
+        // console.log(this.state.socket.id)
+        if (user.socketid !== this.state.socket.id) {
+
+            const socketid = user.socketid
+            const SendFriendRequestButton = () => {
+
+                if (user.whocansendmefr === `everyone`) {
+                    return (
+                        <td>{<button
+
+                            onClick={() => {
+
+                                const obj = { src: this.state.socket.id, target: user.socketid }
+
+                                console.log(obj)
+                                this.state.socket.emit(`fr`, obj)
+                            }}
+                            style={{ fontSize: '10px', color: `red` }}>Send Friend Request</button>}</td>
+                    )
+                }
+            }
+
+            const Approve = () => {
+
+                if (user.SentMe === this.state.socket.id) {
+                    return (
+                        <td>
+                            <button onClick={() => {
+
+                                alert(user.socketid)
+                                const obj = {
+
+                                    src: this.state.socket.id,
+                                    target: user.socketid
+                                }
+                                console.table(obj)
+                                this.state.socket.emit(`letsBeFriends`, obj)
+
+                                // event 2 : update record of current @user.socketid => isFriends true!
+                                var copy = [...this.state.users]
+
+                                for (let i = 0; i < copy.length; i++) {
+
+                                    if (copy[i].socketid === user.socketid) {
+
+                                        copy[i] = { ...copy[i], isFriends: true }
+                                        console.table(copy[i])
+                                    }
+                                }
+
+                                // rendering for event2
+                                this.setState({ users: [...copy] })
+
+                            }}>Approve</button>
+                        </td>
+                    )
+                } else {
+                    return (
+                        <td>-</td>
+                    )
+                }
+            }
+
+            // this will be a button 
+            // const isFriends = user.isFriends ? `true` : `false`
+
+            const isFriends = user.isFriends ? 
+            
+            <button 
+            
+            onClick={()=>{
+
+                this.state.socket.emit(`Contacting`,user.socketid)
+
+            }}
+
+            >Contact Private</button>
+
+            : `false`
+
+            return (
+                <tr style={{ fontSize: '10px', color: `red` }}>
+                    <td>{socketid}</td>
+                    <SendFriendRequestButton />
+                    <Approve />
+                    <td>{isFriends}</td>
+
+                    {/* <td>{user.SentMe + ' ,,,' + this.state.socket.id}</td> */}
+
+                </tr>
+            )
+        }
+
+        // return(<h1>no records</h1>)
+    }
 
     render() {
         return (
             <React.Fragment>
+                <div>
+                    <table>
+                        <thead style={{ fontSize: '10px', color: `red` }}>
+                            <th>socketid</th>
+                            <th>who can send me friend request</th>
+                            <th>Sent Me</th>
+                            <th>isFriends</th>
+                        </thead>
 
-                <table>
-                    <thead style={{ fontSize: '10px' }}>
-                        {/* working? */}
-                        <th>socketid</th>
-                        <th>who can fr</th>
-                        <th>isFriendRequestReceived</th>
-                        <th>isFriends</th>
-                        {/* <th>header2</th> */}
-                    </thead>
-                    <tbody>
+                        {/* tr, multiple td's */}
+
                         {
-                            this.state.users.map(({ socketid, whocansendmefr, isFrRec,isFriends }) => (socketid !== this.state.socket.id) && <tr style={{ fontSize: '10px' }}>
-
-                                <td>{socketid}</td>
-                                <td>{whocansendmefr === `everyone` && !isFrRec && !isFriends && <button onClick={() => {
-
-                                    const obj = { src: this.state.socket.id, target: socketid }
-                                    // buttonClickedSet(!buttonClicked)
-                                    console.log(new Date(), `fr`, obj)
-                                    this.state.socket.emit(`fr`, obj)
-                                }}>add</button>}</td>
-
-                                <td>{isFrRec && whocansendmefr===`everyone` && !isFriends && <button onClick={() => {
-
-                                    
-
-                                    console.table(`letsBeFriends`, { target: socketid, src:this.state.socket.id }) // row record
-
-                                    // order server to emit to two users :)
-                                    // since socket.on's will be at !!!!!!!
-                                    this.state.socket.emit(`letsBeFriends`, { target: socketid, src:this.state.socket.id})
-
-                                    // for current user, modify client array ?  YES
-                                    // or place it all at socket.on ? NO!
-
-                                    // ... working!
-                                    let users = [...this.state.users]
-
-                                    for (let i = 0; i < users.length; i++) {
-
-                                        if (users[i].socketid === socketid) {
-
-                                            users[i] =
-                                                { ...users[i], isFriends: true }
-
-                                            break;
-                                        }
-                                    }
-
-                                    this.setState({ users })
-
-                                }}>accept both sides, change button name</button>}</td>
-
-                            <td>{isFriends && <button onClick={()=>{
-                                
-                                console.log(new Date(),`Currently Contacting`,{target: socketid})
-
-                                // i will update myself
-                                this.state.socket.emit(`Contacting`,socketid)
-
-                            }}>Contact Private</button>}</td>
-
-                            </tr>)
+                            this.state.users.map(user =>
+                                this.userDisplay(user))
                         }
-                    </tbody>
 
-                </table>
-
+                    </table>
+                </div>
             </React.Fragment>
         )
     }
 }
 
+export default AvailableUsersReactJs

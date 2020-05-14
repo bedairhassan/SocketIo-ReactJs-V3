@@ -68,7 +68,7 @@ export default function UserData({ socket }) {
 
             console.log(new Date(), `let's print user object`)
             console.table(user)
-          }}>hiiiiiiiiiiiiiiiiiii</button> */}
+          }}>print User Object</button> */}
 
           <DisplayMySocket
             socket={socket}

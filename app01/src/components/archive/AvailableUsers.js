@@ -14,13 +14,13 @@ export default function AvailableUsers({ socket }) {
 
   useEffect(() => {
 
-    console.log(`%c${new Date()}`, 'color:red')
-    console.log(`useEffect for update user`)
+    //console.log(`%c${new Date()}`, 'color:red')
+    //console.log(`useEffect for update user`)
     socket.on(`update user`, users => {
 
-      console.log(`%c${new Date()}`, 'color:red')
-      console.log(`update user, printing usersReturn`)
-      console.log(users)
+      //console.log(`%c${new Date()}`, 'color:red')
+      //console.log(`update user, printing usersReturn`)
+      //console.log(users)
       usersSet(users)
     })
 
@@ -30,9 +30,9 @@ export default function AvailableUsers({ socket }) {
   // hint: use 
   useEffect(() => socket.on(`fr`, ({ src }) => {
 
-    console.log(`%c${new Date()}`, 'color:red')
-    console.log(`fr: `, src)
-    console.log(users.length)
+    //console.log(`%c${new Date()}`, 'color:red')
+    //console.log(`fr: `, src)
+    //console.log(users.length)
 
 
 
@@ -55,8 +55,8 @@ export default function AvailableUsers({ socket }) {
     // console.log(new Date(),`color:red;`)
     socket.on(availableusers, users => {
 
-      console.log(`%c${new Date()}`, 'color:red')
-      console.log(`useEffect for Available Users`)
+      //console.log(`%c${new Date()}`, 'color:red')
+     // console.log(`useEffect for Available Users`)
       usersSet(users)
     })
 
@@ -64,9 +64,9 @@ export default function AvailableUsers({ socket }) {
 
   const AddMeAsAFriend = ({socketid}) => {
 
-    console.log(`%c${new Date()}`, 'color:red')
-    console.log(`whocansendmefr`)
-    console.log({ src: socket.id, target: socketid })
+    //console.log(`%c${new Date()}`, 'color:red')
+   // console.log(`whocansendmefr`)
+   // console.log({ src: socket.id, target: socketid })
     socket.emit(`fr`, { src: socket.id, target: socketid })
   }
 
