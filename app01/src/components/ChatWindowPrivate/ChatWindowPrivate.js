@@ -18,7 +18,7 @@ class ChatWindowPrivate extends PureComponent {
     componentDidMount() {
 
         this.state.socket.on(`chat2`, user => {
-
+console.table(this.state.users)
            // console.log(new Date(), {
 
             //     fileName: `ChatWindowPrivate.js`,
@@ -62,42 +62,65 @@ class ChatWindowPrivate extends PureComponent {
         })
     }
 
+    filteringFunction(){
+
+        console.log(new Date(),`filteringFunction`)
+console.table(this.state.users)
+        const ret = this.state.users.filter(user=>user.socketid===this.state.ToViewPrivate)
+        console.log(ret)
+
+       return ret
+
+        // return [{message:1}]
+    }
+
     render() {
         return (
             <div style={{ fontSize: '10px', color: `red` }}>
 
                 ChatWindowPrivate
 
-                <table>
-
-                    <thead>
-                        <th>private chat users</th>
-                        <th>actual messages</th>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            {this.state.users.length > 0 && this.state.filteredSetSocketId.map(socketid =>
+              
+                {this.state.users.length > 0 && this.state.filteredSetSocketId.map(socketid =>
                                 <React.Fragment>
-                                    <h1 onClick={() => {
-                                   //     console.log(new Date(), `clicking on user`); 
-                                   //console.table(socketid);
-                                        this.setState({ ToViewPrivate: socketid }) // ToViewPrivate is INTEGER
-                                    }}>{socketid}</h1>
+                                    <ul>
+                                    <li>
+                                        
+                                       <button
+                                       
+                                       onClick={() => {
+                                             this.setState({ ToViewPrivate: socketid }) // ToViewPrivate is INTEGER
+                                         }}
+                                       >{socketid}
+                                           </button> 
+                                        {socketid}
+                                    
+                                    
+                                    </li>
+                                    </ul>
                                 </React.Fragment>
                             )}
-                        </tr>
-                        <tr>
-                            <TinyTable
 
-                                users={this.state.users}
-                                userTarget={this.state.Z}
-                            />
-                        </tr>
-                    </tbody>
+                    
+                           <table>
+                               
+                               <thead>
+                                   <th>date</th>
+                                   <th>message</th>
+                               </thead>
 
-                </table>
-
+                               <tbody>
+                               {
+                               this.filteringFunction().map(element=>
+                                    <tr>
+                                        <td>{element.date}</td>
+                                        <td>{element.message}</td>
+                                    </tr>
+                               )
+                           }
+                               </tbody>
+                           </table>
+                       
 
             </div>
         )

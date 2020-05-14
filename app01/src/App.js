@@ -42,7 +42,7 @@ export default function App() {
         <hr></hr>
         
         {/* FIX Friend Request Sent Issue First */}
-        {/* <ChatWindowPrivate socket={socket}/> */} 
+        {/* <ChatWindowPrivate socket={socket}/>  */}
 
       </div>
 

@@ -95,6 +95,9 @@ class AvailableUsersReactJs extends PureComponent {
                             }}
                             style={{ fontSize: '10px', color: `red` }}>Send Friend Request</button>}</td>
                     )
+                }else{
+
+                    return(<h1>nobody</h1>)
                 }
             }
 
@@ -105,7 +108,7 @@ class AvailableUsersReactJs extends PureComponent {
                         <td>
                             <button onClick={() => {
 
-                                alert(user.socketid)
+                                // alert(user.socketid)
                                 const obj = {
 
                                     src: this.state.socket.id,
