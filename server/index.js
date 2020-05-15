@@ -21,6 +21,8 @@ var users = [] // {socketid,whocansendmefr}
 var io = socket(server);
 io.on('connection', (socket) => {
 
+    // console.log(socket)
+
     const obj = { socketid: socket.id, whocansendmefr: `everyone`, SentMe:'-' }
     console.log(new Date(), `users.push`, obj)
     users.push(obj)
