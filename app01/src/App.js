@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-import UserData from './UserData/UserData';
+import UserData from './components/UserData/UserData';
 import AvailableUsersReactJs from './components/AvailableUsersReactJs';
 // import ConditionalPageDisplay from './components/ConditionalPageDisplay'
 import NavDisplay from './components/NavDisplay';
 
 import Chat from './components/Chat/Chat'
-import ChatWindowPrivate from './components/ChatWindowPrivate/ChatWindowPrivate'
+import ParentChatWindowPrivate from './components/ChatWindowPrivate/Parent'
 
 var socket = require('socket.io-client')('http://localhost:4000');
 
@@ -43,6 +43,7 @@ export default function App() {
         
         {/* FIX Friend Request Sent Issue First */}
         {/* <ChatWindowPrivate socket={socket}/>  */}
+        <ParentChatWindowPrivate socket={socket}/>
 
       </div>
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 
-import { mysocketid } from '../utils/events'
-import Select from '../components/reusable/Select'
+// import { mysocketid } from '../utils/events'
+import Select from '../reusable/Select'
 
 // import '
-import '../../src/App.css';
-import Contacting from '../components/Contacting'
+// import '../../src/App.css';
+import Contacting from '../Contacting'
 
 function WhoCanSendMeFr({ socket, onClick, userPrev }) {
 
@@ -38,7 +38,7 @@ function DisplayMySocket({ socket, returnSocketId }) {
     returnSocketId(socketid)
   }
 
-  useEffect(() => socket.on(mysocketid, socketid => onClickThis(socketid)), [])
+  useEffect(() => socket.on(`what is my socketid`, socketid => onClickThis(socketid)), [])
 
   return (
 
