@@ -1,3 +1,5 @@
+// TODO: have rcc component and remove Server Button
+
 import React, { useState, useEffect } from 'react'
 import ServerButton from '../reusable/ServerButtonEmit'
 import Input from '../reusable/Input'
