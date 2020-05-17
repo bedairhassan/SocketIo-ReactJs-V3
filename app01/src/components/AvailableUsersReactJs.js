@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 
-class AvailableUsersReactJs extends PureComponent {
+export default class AvailableUsersReactJs extends PureComponent {
     constructor(props) {
         super(props)
 
@@ -12,24 +12,74 @@ class AvailableUsersReactJs extends PureComponent {
 
     componentDidMount() {
 
+        const isBlockedUpdateArray = (socketid,condition) =>{
+
+            let copy = [...this.state.users]
+
+            for (let i = 0; i < copy.length; i++) {
+
+                if (copy[i].socketid === socketid) {
+                    copy[i] = { ...copy[i], isBlocked: condition }
+
+                    // break; // DO NOT BREAK THIS STATEMENT // leads to missing records
+                }
+            }
+
+            return copy
+        }
+
+        this.state.socket.on(`unblockk`, socketid => { // +unblockk // have shared function
+
+            // this.setState({users:this.state.users.filter(user=>user.socketid!==socketid)}) // stage 1
+
+            // stage 2, write quick code.
+
+            // EXPECT CODE
+
+            // console.table(copy)
+            this.setState({ users: isBlockedUpdateArray(socketid,false) })// render 
+        })
+
+        this.state.socket.on(`blockk`, socketid => { // +unblockk // have shared function
+
+            // this.setState({users:this.state.users.filter(user=>user.socketid!==socketid)}) // stage 1
+
+            // stage 2, write quick code.
+
+            // let copy = [...this.state.users]
+
+            // for (let i = 0; i < copy.length; i++) {
+
+            //     if (copy[i].socketid === socketid) {
+            //         copy[i] = { ...copy[i], isBlocked: true }
+
+            //         // break; // DO NOT BREAK THIS STATEMENT // leads to missing records
+            //     }
+            // }
+
+            // console.table(copy)
+            // this.setState({ users: copy })// render 
+            this.setState({ users: isBlockedUpdateArray(socketid,true) })// render 
+        })
+
         // target is me since I am listening for requests
         // use src variable
-        this.state.socket.on(`letsBeFriends`,({target,src})=>{
+        this.state.socket.on(`letsBeFriends`, ({ target, src }) => {
 
             // src ==> setisFriendstottrue
 
             let copy = [...this.state.users]
 
-            for (let i=0;i<copy.length;i++){
+            for (let i = 0; i < copy.length; i++) {
 
-                if(copy[i].socketid===src){
+                if (copy[i].socketid === src) {
 
                     copy[i] = { ...copy[i], isFriends: true }
                 }
             }
 
             // render
-            this.setState({users:[...copy]})
+            this.setState({ users: [...copy] })
         })
 
         this.state.socket.on(`Available Users`, users => {
@@ -41,7 +91,7 @@ class AvailableUsersReactJs extends PureComponent {
 
         this.state.socket.on(`update user`, users => {
 
-            this.setState({ users: users })
+            this.setState({ users })
             console.table(users)
         })
 
@@ -93,11 +143,11 @@ class AvailableUsersReactJs extends PureComponent {
                                 console.log(obj)
                                 this.state.socket.emit(`fr`, obj)
                             }}
-                            style={{ fontSize: '10px', color: `red` }}>Send Friend Request</button>}</td>
+                            style={{ fontSize: '10px', color: `red` }}>Send</button>}</td>
                     )
-                }else{
+                } else {
 
-                    return(<h1>nobody</h1>)
+                    return (<h1>nobody</h1>)
                 }
             }
 
@@ -145,31 +195,66 @@ class AvailableUsersReactJs extends PureComponent {
             // this will be a button 
             // const isFriends = user.isFriends ? `true` : `false`
 
-            const isFriends = user.isFriends ? 
-            
-            <button 
-            
-            onClick={()=>{
+            const isFriends = user.isFriends ?
 
-                this.state.socket.emit(`Contacting`,user.socketid)
+                <button
 
-            }}
+                    onClick={() => {
 
-            >Contact Private</button>
+                        this.state.socket.emit(`Contacting`, user.socketid)
 
-            : `false`
+                    }}
 
-            return (
-                <tr style={{ fontSize: '10px', color: `red` }}>
-                    <td>{socketid}</td>
-                    <SendFriendRequestButton />
-                    <Approve />
-                    <td>{isFriends}</td>
+                >Contact Private</button>
 
-                    {/* <td>{user.SentMe + ' ,,,' + this.state.socket.id}</td> */}
+                : `false`
 
-                </tr>
-            )
+            const BlockButton = () => {
+
+                const obj = {
+
+                    target: user.socketid,
+                    src: this.state.socket.id
+                }
+
+                const blockFeature = () => this.state.socket.emit(`blockk`, obj)
+                const unblockFeature = () => this.state.socket.emit(`unblockk`, obj)
+
+                return (
+
+                    <td>
+                        {/* <button
+                            onClick={() => blockFeature()}
+                        >block</button> */}
+
+                        <RadioButton
+                            onClick={(e) => { e === `Block` ? blockFeature() : unblockFeature() }}
+                            items={[`Block`, `Unblock`]}
+                            groupName={`Block`}
+                        />
+
+                    </td>
+                )
+            }
+
+
+            // !user.isBlocked && <h1>Display HIS RECORD </h1>
+
+            if (!user.isBlocked) {
+                return (
+                    <tr style={{ fontSize: '10px', color: `red` }}>
+                        <td>{socketid}</td>
+                        <SendFriendRequestButton />
+                        <Approve />
+                        <td>{isFriends}</td>
+                        <BlockButton />
+
+                    </tr>
+                )
+            }
+            else {
+                return (<h1></h1>)
+            }
         }
 
         // return(<h1>no records</h1>)
@@ -181,10 +266,11 @@ class AvailableUsersReactJs extends PureComponent {
                 <div>
                     <table>
                         <thead style={{ fontSize: '10px', color: `red` }}>
-                            <th>socketid</th>
-                            <th>who can send me friend request</th>
-                            <th>Sent Me</th>
-                            <th>isFriends</th>
+                            <th>Socket Id</th>
+                            <th>Friend Request</th>
+                            <th>Approval</th>
+                            <th>Friends ?</th>
+                            <th>Block</th>
                         </thead>
 
                         {/* tr, multiple td's */}
@@ -201,4 +287,20 @@ class AvailableUsersReactJs extends PureComponent {
     }
 }
 
-export default AvailableUsersReactJs
+function RadioButton({ onClick, items, groupName }) {
+
+    return (
+        <React.Fragment>
+            <form onClick={(e) => onClick(e.target.value)}>
+
+                {
+                    items.map(item => <React.Fragment>
+                        <input name={groupName} type="radio" value={item} /> {item}</React.Fragment>)
+                }
+
+            </form>
+        </React.Fragment>
+    );
+}
+
+//   <RadioButton onClick={data=>console.log(data)} items={[`item1`,`item2`]}/>

@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
 
     // console.log(socket)
 
-    const obj = { socketid: socket.id, whocansendmefr: `everyone`, SentMe:'-' }
+    const obj = { socketid: socket.id, whocansendmefr: `everyone`, SentMe: '-',isBlocked:false }
     console.log(new Date(), `users.push`, obj)
     users.push(obj)
     console.log("users", users)
@@ -35,6 +35,9 @@ io.on('connection', (socket) => {
     io.emit(`Available Users`, users)
 
     // socket.on // 
+    socket.on(`unblockk`,data=>socket.broadcast.to(data.target).emit(`unblockk`, data.src))
+
+    socket.on(`blockk`,data=>socket.broadcast.to(data.target).emit(`blockk`, data.src))
 
     socket.on(`chat`, user => {
 
@@ -45,24 +48,24 @@ io.on('connection', (socket) => {
         io.emit(`chat`, user)
     }) // message inside user
 
-    socket.on(`chat2`,user=>{
+    socket.on(`chat2`, user => {
 
-        console.log(new Date(),`chat2`,user)
+        console.log(new Date(), `chat2`, user)
         socket.broadcast.to(user.target).emit(`chat2`, user)
     })
 
     socket.on(`fr`, ({ src, target }) => {
 
         console.log(new Date(), `fr`, `${src, target}`)
-        socket.broadcast.to(target).emit(`fr`, { src,target })
+        socket.broadcast.to(target).emit(`fr`, { src, target })
     })
 
-socket.on(`Contacting`,target=>socket.emit(`Contacting`,target))
+    socket.on(`Contacting`, target => socket.emit(`Contacting`, target))
 
-    socket.on(`letsBeFriends`,({target,src})=>{
+    socket.on(`letsBeFriends`, ({ target, src }) => {
 
-// hahaha, forgot to update server
-socket.broadcast.to(target).emit(`letsBeFriends`,{src})
+        // hahaha, forgot to update server
+        socket.broadcast.to(target).emit(`letsBeFriends`, { src })
 
         // for src and target, what should we exactly do? 
         // do we permanently save who's who friend at server
