@@ -21,9 +21,12 @@ var users = [] // {socketid,whocansendmefr}
 var io = socket(server);
 io.on('connection', (socket) => {
 
+    // syncs with chat : public chat
+    socket.on(`updateCount`,({count,src})=>io.emit(`updateCount`, {count,src}))
+
     // console.log(socket)
 
-    const obj = { socketid: socket.id, whocansendmefr: `everyone`, SentMe: '-',isBlocked:false }
+    const obj = { socketid: socket.id, whocansendmefr: `everyone`, SentMe: '-',isBlocked:false , count:0}
     console.log(new Date(), `users.push`, obj)
     users.push(obj)
     console.log("users", users)
@@ -35,9 +38,13 @@ io.on('connection', (socket) => {
     io.emit(`Available Users`, users)
 
     // socket.on // 
-    socket.on(`unblockk`,data=>socket.broadcast.to(data.target).emit(`unblockk`, data.src))
+    // socket.on(`unblockk`,data=>socket.broadcast.to(data.target).emit(`unblockk`, data.src))
 
-    socket.on(`blockk`,data=>socket.broadcast.to(data.target).emit(`blockk`, data.src))
+    socket.on(`blockk`,data=>socket.broadcast.to(data.target).emit(`blockk`, {
+
+        src:data.src,
+        condition:data.condition
+    }))
 
     socket.on(`chat`, user => {
 

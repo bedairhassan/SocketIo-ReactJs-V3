@@ -1,60 +1,59 @@
-// TODO: have rcc component and remove Server Button
-
-import React, { useState, useEffect } from 'react'
-import ServerButton from '../reusable/ServerButtonEmit'
+import React, { PureComponent } from 'react'
 import Input from '../reusable/Input'
 
-// warn: isFriendRequest:-1 --- this shall not be inside server, and server shall modify two variables only
+export default class Form extends React.Component {
+    constructor(props) {
+        super(props)
 
-// input field, button
-function Form({ socket }) {
+        this.state = {
+            message:`message does not exist`,
+            socket:props.socket,
+            src:props.socket.id,
+            target:-1
+        }
+    }
 
-    const [contactingState, contactingStateSet] = useState(-1) // -1 for everyone
+    targetSet=(target)=>this.setState({target})
+    messageSet=(message)=>this.setState({message})
 
-    useEffect(() => {
+    componentDidMount(){
+        this.state.socket.on(`Contacting`, target => this.targetSet(target))
+    }
 
-        socket.on(`Contacting`, target => {
+    render() {
+        return (
+            <React.Fragment>
+            <Input 
+            onChange={message => this.messageSet(message)} 
+            placeholder={`enter message`} />
 
-       //     console.log(new Date(), `[Form] Contacting`, target)
-            // console.table({ target })
+            {this.state.target === -1 ? (
 
-            contactingStateSet(target)
-        })
+                <button onClick={() => {
 
-    }, [])
+                    this.state.socket.emit(`chat`, {
+                        src: this.state.src,
+                        message:this.state.message,
+                        isPrivate: false
+                    })
 
-    const [message, messageSet] = useState(`message does not exist`)
+                }}>Broadcast Message</button>) : (
 
-    return (
-        <React.Fragment>
-            <Input onChange={message => messageSet(message)} placeholder={`enter message`} />
 
-            {/* { socket, event,responding,buttonName ,data} */}
+                    <button onClick={() => {
 
-            {/* for cleaner code, Server Button shall be written once ! */}
+                        this.state.socket.emit(`chat2`, {
+                            src:this.state.src,
+                            target:this.state.target,
+                            message:this.state.message,
+                            isPrivate: true
+                        })
 
-            {contactingState === -1 ? (
-
-// EVERYONE
-                <ServerButton
-                    socket={socket}
-                    event={`chat`}
-                    buttonName={`Broadcast Message`}
-                    data={{ src: socket.id, message, isPrivate: false }} />) : (
-
-                        // new attribute here is target id, which won't be used anyways except for server :)
-
-                        // PRIVATE !
-                <ServerButton
-                    socket={socket}
-                    event={`chat2`}
-                    buttonName={`Send Private`}
-                    data={{ src: socket.id, target:contactingState, message, isPrivate: true }} />
-                )}
-
+                    }}>Send Private</button>
+                )
+            }
 
         </React.Fragment>
-    )
+        )
+    }
 }
-
-export default Form

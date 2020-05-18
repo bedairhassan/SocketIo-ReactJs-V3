@@ -52,6 +52,7 @@ export default class Table extends React.Component {
       // })
 
       user = { ...user, date: new Date() + `` }
+    
 
       //console.log(new Date(), {
 
