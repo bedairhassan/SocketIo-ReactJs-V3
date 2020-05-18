@@ -31,13 +31,15 @@ export default class AvailableUsersReactJs extends PureComponent {
         this.state.socket.on(`blockk`, data => { // +unblockk // have shared function
             const {src,condition} = data
 
+            this.setState({ users: isBlockedUpdateArray(src,condition) })// render
+
             // how about one line, and false => !condition
             // how about one line, and true => condition
-            if(!condition) {
-                this.setState({ users: isBlockedUpdateArray(src,false) })// render
-            }else{
-                this.setState({ users: isBlockedUpdateArray(src,true) })// render
-            }
+            // if(!condition) {
+            //     this.setState({ users: isBlockedUpdateArray(src,false) })// render
+            // }else{
+            //     this.setState({ users: isBlockedUpdateArray(src,true) })// render
+            // }
 
             // this.setState({users:this.state.users.filter(user=>user.socketid!==socketid)}) // stage 1
 
