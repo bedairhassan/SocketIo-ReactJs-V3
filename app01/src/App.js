@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import UserData from './components/UserData/UserData';
-import AvailableUsersReactJs from './components/AvailableUsersReactJs';
+import AvailableUsers from './components/AvailableUsers/Parent';
 // import ConditionalPageDisplay from './components/ConditionalPageDisplay'
 import NavDisplay from './components/NavDisplay';
 
@@ -32,7 +32,7 @@ export default function App() {
 
         <h1 style={{ fontSize: '10px' }}>Conclusion, Yourself can't be seen in this table</h1>
         <h1 style={{ fontSize: '10px', color: `red` }}>AVAILABLE USERS</h1>
-        <AvailableUsersReactJs socket={socket} />
+        <AvailableUsers socket={socket} />
       </div>
 
       <div className={`main`}>
