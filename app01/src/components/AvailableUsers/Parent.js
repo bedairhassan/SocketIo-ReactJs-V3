@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 
 // helpers
 import IsFriends from '../AvailableUsers/IsFriends'
+import { isBlockedUpdateArray,update_isFriendsTrue,update_SentMe } from '../AvailableUsers/utils'
 
 export default class AvailableUsersReactJs extends PureComponent {
     constructor(props) {
@@ -15,114 +16,26 @@ export default class AvailableUsersReactJs extends PureComponent {
 
     componentDidMount() {
 
-        const isBlockedUpdateArray = (socketid, condition) => {
+        this.state.socket.on(`blockk`, data =>
 
-            let copy = [...this.state.users]
-
-            for (let i = 0; i < copy.length; i++) {
-
-                if (copy[i].socketid === socketid) {
-                    copy[i] = { ...copy[i], isBlocked: condition }
-
-                    // break; // DO NOT BREAK THIS STATEMENT // leads to missing records
-                }
-            }
-
-            return copy
-        }
-        //
-        this.state.socket.on(`blockk`, data => { // +unblockk // have shared function
-            const { src, condition } = data
-
-            this.setState({ users: isBlockedUpdateArray(src, condition) })// render
-
-            // how about one line, and false => !condition
-            // how about one line, and true => condition
-            // if(!condition) {
-            //     this.setState({ users: isBlockedUpdateArray(src,false) })// render
-            // }else{
-            //     this.setState({ users: isBlockedUpdateArray(src,true) })// render
-            // }
-
-            // this.setState({users:this.state.users.filter(user=>user.socketid!==socketid)}) // stage 1
-
-            // stage 2, write quick code.
-
-            // let copy = [...this.state.users]
-
-            // for (let i = 0; i < copy.length; i++) {
-
-            //     if (copy[i].socketid === socketid) {
-            //         copy[i] = { ...copy[i], isBlocked: true }
-
-            //         // break; // DO NOT BREAK THIS STATEMENT // leads to missing records
-            //     }
-            // }
-
-            // console.table(copy)
-            // this.setState({ users: copy })// render 
-
-        })
+            this.setState({ users: isBlockedUpdateArray(this.state.users, data.src, data.condition) })
+        )
 
         // target is me since I am listening for requests
         // use src variable
-        this.state.socket.on(`letsBeFriends`, ({ target, src }) => {
+        this.state.socket.on(`letsBeFriends`, ({ target, src }) => 
+            this.setState({ users: update_isFriendsTrue(this.state.users,src) })
+        )
 
-            // src ==> setisFriendstottrue
+        this.state.socket.on(`Available Users`, users =>  this.setState({ users }))
 
-            let copy = [...this.state.users]
-
-            for (let i = 0; i < copy.length; i++) {
-
-                if (copy[i].socketid === src) {
-
-                    copy[i] = { ...copy[i], isFriends: true }
-                }
-            }
-
-            // render
-            this.setState({ users: [...copy] })
-        })
-
-        this.state.socket.on(`Available Users`, users => {
-
-            console.table(users)
-            this.setState({ users })
-
-        })
-
-        this.state.socket.on(`update user`, users => {
-
-            this.setState({ users })
-            console.table(users)
-        })
+        this.state.socket.on(`update user`, users => this.setState({ users }))
 
         // currently, I am the target
-        this.state.socket.on(`fr`, ({ src, target }) => {
+        this.state.socket.on(`fr`, ({ src, target }) => 
 
-            var copy = [...this.state.users]
-
-            // cycle through array
-            for (let i = 0; i < copy.length; i++) {
-
-                // search for src
-                if (copy[i].socketid === src) {
-
-                    console.log(new Date(), `founding src`)
-
-                    // implementation
-                    copy[i] = { ...copy[i], SentMe: target }
-
-                    console.table(copy[i])
-
-                    // if found, break
-                    break;
-                }
-            }
-
-            // render
-            this.setState({ users: [...copy] })
-        })
+            this.setState({ users: update_SentMe(this.state.users,src,target) })
+        )
     }
 
     userDisplay(user) {

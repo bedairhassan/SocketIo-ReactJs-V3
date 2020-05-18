@@ -1,21 +1,14 @@
 // import react from `react`
 import React, { useState, useEffect } from 'react';
 
+import ContactingState from './ContactingState'
+
 export default function Contacting({ socket }) {
 
   // either has socketid of person you want to contact or dash
   const [contactingState, contactingStateSet] = useState(-1)
 
-  useEffect(() => {
-
-    socket.on(`Contacting`, target => {
-
-      console.log(new Date(), `Contacting`, target)
-      // console.table({ target })
-
-      contactingStateSet(target)
-    })
-  }, [])
+  useEffect(() => socket.on(`Contacting`, target => contactingStateSet(target)), [])
 
   const contactingHandle = (target) => {
 
@@ -23,9 +16,8 @@ export default function Contacting({ socket }) {
     socket.emit(`Contacting`, target)
   }
 
-  const ConditionalContactingState = ()=>
-  contactingState===-1?`Everyone`:contactingState
-  
+
+
 
   return (
 
@@ -33,18 +25,13 @@ export default function Contacting({ socket }) {
 
       <tr>
 
-        <td> Who am I contacting right now?</td>
-        <td><ConditionalContactingState/></td>
-
+        <ContactingState contactingState={contactingState} />
 
         <td>
           <button
             onClick={() => contactingHandle(-1)}>
-            Contact Everyone</button>
+            E</button>
         </td>
-
-
-
       </tr>
 
 
