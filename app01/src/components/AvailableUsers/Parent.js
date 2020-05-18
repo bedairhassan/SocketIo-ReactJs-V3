@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react'
 
+// helpers
+import IsFriends from '../AvailableUsers/IsFriends'
+
 export default class AvailableUsersReactJs extends PureComponent {
     constructor(props) {
         super(props)
@@ -12,7 +15,7 @@ export default class AvailableUsersReactJs extends PureComponent {
 
     componentDidMount() {
 
-        const isBlockedUpdateArray = (socketid,condition) =>{
+        const isBlockedUpdateArray = (socketid, condition) => {
 
             let copy = [...this.state.users]
 
@@ -27,11 +30,11 @@ export default class AvailableUsersReactJs extends PureComponent {
 
             return copy
         }
-//
+        //
         this.state.socket.on(`blockk`, data => { // +unblockk // have shared function
-            const {src,condition} = data
+            const { src, condition } = data
 
-            this.setState({ users: isBlockedUpdateArray(src,condition) })// render
+            this.setState({ users: isBlockedUpdateArray(src, condition) })// render
 
             // how about one line, and false => !condition
             // how about one line, and true => condition
@@ -58,7 +61,7 @@ export default class AvailableUsersReactJs extends PureComponent {
 
             // console.table(copy)
             // this.setState({ users: copy })// render 
-             
+
         })
 
         // target is me since I am listening for requests
@@ -194,19 +197,8 @@ export default class AvailableUsersReactJs extends PureComponent {
             // this will be a button 
             // const isFriends = user.isFriends ? `true` : `false`
 
-            const isFriends = user.isFriends ?
+            // props
 
-                <button 
-
-                    onClick={() => {
-
-                        this.state.socket.emit(`Contacting`, user.socketid)
-
-                    }}
-
-                >Contact Private</button>
-
-                : `false`
 
             const BlockButton = () => {
 
@@ -216,8 +208,8 @@ export default class AvailableUsersReactJs extends PureComponent {
                     src: this.state.socket.id
                 }
 
-                const blockFeature = (blockCondition)=>{
-                    this.state.socket.emit(`blockk`, {...obj,condition:blockCondition})
+                const blockFeature = (blockCondition) => {
+                    this.state.socket.emit(`blockk`, { ...obj, condition: blockCondition })
                 }
 
                 return (
@@ -227,7 +219,7 @@ export default class AvailableUsersReactJs extends PureComponent {
                             onClick={() => blockFeature()}
                         >block</button> */}
 
-                        <RadioButton 
+                        <RadioButton
                             onClick={(e) => { e === `Block` ? blockFeature(true) : blockFeature(false) }}
                             items={[`Block`, `Unblock`]}
                             groupName={`Block`}
@@ -237,11 +229,11 @@ export default class AvailableUsersReactJs extends PureComponent {
                 )
             }
 
-            const CountDisplay = ()=>{
+            const CountDisplay = () => {
 
-                const {count}=user
+                const { count } = user
 
-                return(
+                return (
                     <td>{count}</td>
                 )
             }
@@ -255,7 +247,7 @@ export default class AvailableUsersReactJs extends PureComponent {
                         <td>{socketid}</td>
                         <SendFriendRequestButton />
                         <Approve />
-                        <td>{isFriends}</td>
+                        <td><IsFriends socket={this.state.socket} user={user} /></td>
                         <BlockButton />
                         <CountDisplay />
 
@@ -315,3 +307,7 @@ function RadioButton({ onClick, items, groupName }) {
 }
 
 //   <RadioButton onClick={data=>console.log(data)} items={[`item1`,`item2`]}/>
+
+
+// {socket,user}
+

@@ -16,3 +16,10 @@
   margin-left: 360px; /* Same as the width of the sidebar */
   padding: 0px 10px;
 }
+
+/* style={{ fontSize: '10px' }} */
+
+.smallFont{
+
+  font-size: '10px';
+}
