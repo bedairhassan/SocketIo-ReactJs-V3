@@ -27,7 +27,7 @@ export default class AvailableUsersReactJs extends PureComponent {
 
             return copy
         }
-
+//
         this.state.socket.on(`blockk`, data => { // +unblockk // have shared function
             const {src,condition} = data
 
