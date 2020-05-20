@@ -7,6 +7,7 @@ import { isBlockedUpdateArray, update_isFriendsTrue, update_SentMe } from '../Av
 import Approve from '../AvailableUsers/Approve'
 import BlockButton from '../AvailableUsers/BlockButton'
 import CountDisplay from '../AvailableUsers/CountDisplay'
+import SendFriendRequestButton from '../AvailableUsers/SendFriendRequestButton'
 
 export default class AvailableUsersReactJs extends PureComponent {
 
@@ -53,47 +54,17 @@ export default class AvailableUsersReactJs extends PureComponent {
         if (user.socketid !== this.state.socket.id) {
 
             const socketid = user.socketid
-            const SendFriendRequestButton = () => {
-
-                if (user.whocansendmefr === `everyone`) {
-                    return (
-                        <td>{<button
-
-                            onClick={() => {
-
-                                const obj = { src: this.state.socket.id, target: user.socketid }
-
-                                console.log(obj)
-                                this.state.socket.emit(`fr`, obj)
-                            }}
-                            style={{ fontSize: '10px', color: `red` }}>Send</button>}</td>
-                    )
-                } else {
-
-                    return (<h1>nobody</h1>)
-                }
-            }
-
-
-
-            // this will be a button 
-            // const isFriends = user.isFriends ? `true` : `false`
-
-            // props
-
-
-
-
-
-
-
-            // !user.isBlocked && <h1>Display HIS RECORD </h1>
 
             if (!user.isBlocked) {
                 return (
                     <tr style={{ fontSize: '10px', color: `red` }}>
                         <td>{socketid}</td>
-                        <SendFriendRequestButton />
+                        <td>
+                            <SendFriendRequestButton 
+                                user={user}
+                                socket={this.state.socket}
+                            />
+                        </td>
                         <td>
                             <Approve
                                 socket={this.state.socket}
