@@ -5,7 +5,7 @@ import Select from '../reusable/Select'
 
 // import '
 // import '../../src/App.css';
-import ParentContact from './Contacting/ParentContact'
+import ParentContact from './ParentContact'
 import DisplayMySocket from './DisplayMySocket'
 
 export default function UserData({ socket }) {
