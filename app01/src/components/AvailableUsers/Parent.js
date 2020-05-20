@@ -6,8 +6,10 @@ import { isBlockedUpdateArray, update_isFriendsTrue, update_SentMe } from '../Av
 
 import Approve from '../AvailableUsers/Approve'
 import BlockButton from '../AvailableUsers/BlockButton'
+import CountDisplay from '../AvailableUsers/CountDisplay'
 
 export default class AvailableUsersReactJs extends PureComponent {
+
     constructor(props) {
         super(props)
 
@@ -82,14 +84,7 @@ export default class AvailableUsersReactJs extends PureComponent {
 
 
 
-            const CountDisplay = () => {
 
-                const { count } = user
-
-                return (
-                    <td>{count}</td>
-                )
-            }
 
 
             // !user.isBlocked && <h1>Display HIS RECORD </h1>
@@ -99,12 +94,14 @@ export default class AvailableUsersReactJs extends PureComponent {
                     <tr style={{ fontSize: '10px', color: `red` }}>
                         <td>{socketid}</td>
                         <SendFriendRequestButton />
-                        <Approve
-                            socket={this.state.socket}
-                            user={user}
-                            users={this.state.users}
-                            src={this.state.socket.id} />
-
+                        <td>
+                            <Approve
+                                socket={this.state.socket}
+                                user={user}
+                                users={this.state.users}
+                                src={this.state.socket.id}
+                            />
+                        </td>
                         <td>
                             <IsFriends
                                 socket={this.state.socket}
@@ -117,7 +114,11 @@ export default class AvailableUsersReactJs extends PureComponent {
                                 user={user}
                             />
                         </td>
-                        <CountDisplay />
+                        <td>
+                            <CountDisplay
+                                user={user}
+                            />
+                        </td>
 
                     </tr>
                 )
