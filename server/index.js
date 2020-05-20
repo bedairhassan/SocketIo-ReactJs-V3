@@ -2,18 +2,7 @@
 var express = require('express');
 var socket = require('socket.io');
 
-// import disconnect from './events/disconnect'
-const {disconnect} = require(`./events/disconnect`)
-const {UpdateUser} = require('./events/UpdateUser')
-const {Intro} = require('./events/Intro')
-const {localUsersUpdate} = require('./events/localUsersUpdate')
-const {Block} = require('./events/Block')
-const {Chat} = require('./events/Chat')
-const {Chat2} = require('./events/Chat2')
-const {fr} = require('./events/fr')
-const {Contacting} = require('./events/Contacting')
-const {letsBeFriends}= require('./events/letsBeFriends')
-
+const {disconnect,UpdateUser,Intro,localUsersUpdate,Block,Chat,Chat2,fr,Contacting,letsBeFriends}=require('./events/Parent')
 
 // App setup
 var app = express();
@@ -54,9 +43,7 @@ io.on('connection', (socket) => {
     socket.on(`letsBeFriends`, ({ target, src }) => 
     letsBeFriends(socket,{src,target}))
 
-    //
     socket.on(`update user`, user => users=UpdateUser(io,users,user))
 
-    // 
     socket.on(`disconnect`, () => users=disconnect(io,socket,users))
 });
