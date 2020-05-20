@@ -2,8 +2,18 @@
 var express = require('express');
 var socket = require('socket.io');
 
-// import {mysocketid} from './events'
-// import {mysocketid} from './events'
+// import disconnect from './events/disconnect'
+const {disconnect} = require(`./events/disconnect`)
+const {UpdateUser} = require('./events/UpdateUser')
+const {Intro} = require('./events/Intro')
+const {localUsersUpdate} = require('./events/localUsersUpdate')
+const {Block} = require('./events/Block')
+const {Chat} = require('./events/Chat')
+const {Chat2} = require('./events/Chat2')
+const {fr} = require('./events/fr')
+const {Contacting} = require('./events/Contacting')
+const {letsBeFriends}= require('./events/letsBeFriends')
+
 
 // App setup
 var app = express();
@@ -12,107 +22,41 @@ var server = app.listen(4000, function () {
 });
 
 // Static files
-// app.use(express.static('public'));
 
 // Server Variables
 var users = [] // {socketid,whocansendmefr}
 
 // Socket setup & pass server
 var io = socket(server);
-io.on('connection', (socket) => {
 
-    // syncs with chat : public chat
-    socket.on(`updateCount`,({count,src})=>io.emit(`updateCount`, {count,src}))
+io.on('connection', (socket) => { 
 
-    // console.log(socket)
+    users=Intro(io,socket,users)
 
-    const obj = { socketid: socket.id, whocansendmefr: `everyone`, SentMe: '-',isBlocked:false , count:0}
-    console.log(new Date(), `users.push`, obj)
-    users.push(obj)
-    console.log("users", users)
+    socket.on(`localUsersUpdate`,users=>
+    localUsersUpdate(socket,users))
 
-    console.log(new Date(), `what is my socketid`, socket.id)
-    socket.emit(`what is my socketid`, socket.id)
+    socket.on(`blockk`,data=>
+    Block(socket,data))
 
-    console.log(new Date(), `Available Users`, users)
-    io.emit(`Available Users`, users)
+    socket.on(`chat`, user => 
+    Chat(io,user)) 
 
-    // socket.on // 
-    // socket.on(`unblockk`,data=>socket.broadcast.to(data.target).emit(`unblockk`, data.src))
+    socket.on(`chat2`, user => 
+    Chat2(socket,user))
 
-    socket.on(`localUsersUpdate`,users=>socket.emit(`localUsersUpdate`,users))
-
-    socket.on(`blockk`,data=>socket.broadcast.to(data.target).emit(`blockk`, {
-
-        src:data.src,
-        condition:data.condition
-    }))
-
-    socket.on(`chat`, user => {
-
-        // how about u ... 
-        // DO NOT REMOVE DATE, because clients d....
-        // or shall I remove date?
-        console.log(new Date(), `chat`, user)
-        io.emit(`chat`, user)
-    }) // message inside user
-
-    socket.on(`chat2`, user => {
-
-        console.log(new Date(), `chat2`, user)
-        socket.broadcast.to(user.target).emit(`chat2`, user)
-    })
-
-    socket.on(`fr`, ({ src, target }) => {
-
-        console.log(new Date(), `fr`, `${src, target}`)
-        socket.broadcast.to(target).emit(`fr`, { src, target })
-    })
+    socket.on(`fr`, ({ src, target }) => 
+    fr(socket,{src,target}))
 
     socket.on(`Contacting`, target => 
-    socket.emit(`Contacting`, target))
+    Contacting(socket,target))
 
     socket.on(`letsBeFriends`, ({ target, src }) => 
-    socket.broadcast.to(target).emit(`letsBeFriends`, { src }))
+    letsBeFriends(socket,{src,target}))
 
     //
-    socket.on(`update user`, user => {
-
-        console.log(new Date(), `update user`, user)
-
-        // filter,extract i // modify[0] // replace, use i //
-        for (let i = 0; i < users.length; i++) {
-
-            if (users[i].socketid === user.socketid) {
-                console.log(user)
-                users[i] = { ...user }
-                break;
-            }
-        }
-
-        console.log(`io.emit`, `update user`, users)
-        io.emit(`update user`, users)
-    })
+    socket.on(`update user`, user => users=UpdateUser(io,users,user))
 
     // 
-    socket.on(`disconnect`, () => {
-
-        var disconnectt = { beforeDisconnect: users.length }
-        for (let i = 0; i < users.length; i++) {
-
-            if (users[i].socketid === socket.id) {
-                // console.log(users[i])
-                users.splice(i, 1)
-                break;
-            }
-        }
-        disconnectt = { ...disconnectt, afterDisconnect: users.length }
-
-        console.log(new Date(), `io.emit`, users)
-        io.emit(`Available Users`, users)
-        socket.disconnect()
-    })
+    socket.on(`disconnect`, () => users=disconnect(io,socket,users))
 });
-
-// write comment here to restart server
-// 
