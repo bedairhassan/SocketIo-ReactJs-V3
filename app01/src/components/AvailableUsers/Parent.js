@@ -2,7 +2,10 @@ import React, { PureComponent } from 'react'
 
 // helpers
 import IsFriends from '../AvailableUsers/IsFriends'
-import { isBlockedUpdateArray,update_isFriendsTrue,update_SentMe } from '../AvailableUsers/utils'
+import { isBlockedUpdateArray, update_isFriendsTrue, update_SentMe } from '../AvailableUsers/utils'
+
+import Approve from '../AvailableUsers/Approve'
+import BlockButton from '../AvailableUsers/BlockButton'
 
 export default class AvailableUsersReactJs extends PureComponent {
     constructor(props) {
@@ -16,6 +19,9 @@ export default class AvailableUsersReactJs extends PureComponent {
 
     componentDidMount() {
 
+        this.state.socket.on(`localUsersUpdate`, users =>
+            this.setState({ users }))
+
         this.state.socket.on(`blockk`, data =>
 
             this.setState({ users: isBlockedUpdateArray(this.state.users, data.src, data.condition) })
@@ -23,18 +29,18 @@ export default class AvailableUsersReactJs extends PureComponent {
 
         // target is me since I am listening for requests
         // use src variable
-        this.state.socket.on(`letsBeFriends`, ({ target, src }) => 
-            this.setState({ users: update_isFriendsTrue(this.state.users,src) })
+        this.state.socket.on(`letsBeFriends`, ({ target, src }) =>
+            this.setState({ users: update_isFriendsTrue(this.state.users, src) })
         )
 
-        this.state.socket.on(`Available Users`, users =>  this.setState({ users }))
+        this.state.socket.on(`Available Users`, users => this.setState({ users }))
 
         this.state.socket.on(`update user`, users => this.setState({ users }))
 
         // currently, I am the target
-        this.state.socket.on(`fr`, ({ src, target }) => 
+        this.state.socket.on(`fr`, ({ src, target }) =>
 
-            this.setState({ users: update_SentMe(this.state.users,src,target) })
+            this.setState({ users: update_SentMe(this.state.users, src, target) })
         )
     }
 
@@ -66,46 +72,7 @@ export default class AvailableUsersReactJs extends PureComponent {
                 }
             }
 
-            const Approve = () => {
 
-                if (user.SentMe === this.state.socket.id) {
-                    return (
-                        <td>
-                            <button onClick={() => {
-
-                                // alert(user.socketid)
-                                const obj = {
-
-                                    src: this.state.socket.id,
-                                    target: user.socketid
-                                }
-                                console.table(obj)
-                                this.state.socket.emit(`letsBeFriends`, obj)
-
-                                // event 2 : update record of current @user.socketid => isFriends true!
-                                var copy = [...this.state.users]
-
-                                for (let i = 0; i < copy.length; i++) {
-
-                                    if (copy[i].socketid === user.socketid) {
-
-                                        copy[i] = { ...copy[i], isFriends: true }
-                                        console.table(copy[i])
-                                    }
-                                }
-
-                                // rendering for event2
-                                this.setState({ users: [...copy] })
-
-                            }}>Approve</button>
-                        </td>
-                    )
-                } else {
-                    return (
-                        <td>-</td>
-                    )
-                }
-            }
 
             // this will be a button 
             // const isFriends = user.isFriends ? `true` : `false`
@@ -113,34 +80,7 @@ export default class AvailableUsersReactJs extends PureComponent {
             // props
 
 
-            const BlockButton = () => {
 
-                const obj = {
-
-                    target: user.socketid,
-                    src: this.state.socket.id
-                }
-
-                const blockFeature = (blockCondition) => {
-                    this.state.socket.emit(`blockk`, { ...obj, condition: blockCondition })
-                }
-
-                return (
-
-                    <td>
-                        {/* <button
-                            onClick={() => blockFeature()}
-                        >block</button> */}
-
-                        <RadioButton
-                            onClick={(e) => { e === `Block` ? blockFeature(true) : blockFeature(false) }}
-                            items={[`Block`, `Unblock`]}
-                            groupName={`Block`}
-                        />
-
-                    </td>
-                )
-            }
 
             const CountDisplay = () => {
 
@@ -159,9 +99,24 @@ export default class AvailableUsersReactJs extends PureComponent {
                     <tr style={{ fontSize: '10px', color: `red` }}>
                         <td>{socketid}</td>
                         <SendFriendRequestButton />
-                        <Approve />
-                        <td><IsFriends socket={this.state.socket} user={user} /></td>
-                        <BlockButton />
+                        <Approve
+                            socket={this.state.socket}
+                            user={user}
+                            users={this.state.users}
+                            src={this.state.socket.id} />
+
+                        <td>
+                            <IsFriends
+                                socket={this.state.socket}
+                                user={user}
+                            />
+                        </td>
+                        <td>
+                            <BlockButton
+                                socket={this.state.socket}
+                                user={user}
+                            />
+                        </td>
                         <CountDisplay />
 
                     </tr>
@@ -203,21 +158,7 @@ export default class AvailableUsersReactJs extends PureComponent {
     }
 }
 
-function RadioButton({ onClick, items, groupName }) {
 
-    return (
-        <React.Fragment>
-            <form onClick={(e) => onClick(e.target.value)}>
-
-                {
-                    items.map(item => <React.Fragment>
-                        <input name={groupName} type="radio" value={item} /> {item}</React.Fragment>)
-                }
-
-            </form>
-        </React.Fragment>
-    );
-}
 
 //   <RadioButton onClick={data=>console.log(data)} items={[`item1`,`item2`]}/>
 
