@@ -1,59 +1,45 @@
 import React, { PureComponent } from 'react'
 import Input from '../reusable/Input'
+import Button from './Button'
 
 export default class Form extends React.Component {
     constructor(props) {
         super(props)
-
+        
         this.state = {
-            message:`message does not exist`,
-            socket:props.socket,
-            src:props.socket.id,
-            target:-1
+            message: `message does not exist`,
+            socket: props.socket,
+            src: props.socket.id,
+            target: -1
         }
     }
 
-    targetSet=(target)=>this.setState({target})
-    messageSet=(message)=>this.setState({message})
+    targetSet = (target) => this.setState({ target })
+    messageSet = (message) => this.setState({ message })
 
-    componentDidMount(){
+    componentDidMount() {
         this.state.socket.on(`Contacting`, target => this.targetSet(target))
     }
 
     render() {
+
         return (
             <React.Fragment>
-            <Input 
-            onChange={message => this.messageSet(message)} 
-            placeholder={`enter message`} />
+                
+                <Input
+                class="form-control"
+                    onChange={message => this.messageSet(message)}
+                    placeholder={`enter message`} />
 
-            {this.state.target === -1 ? (
+                <Button 
+                socket={this.state.socket}
+                target={this.state.target}
+                message={this.state.message}
+                src={this.state.socket.id}
+                />
 
-                <button onClick={() => {
-
-                    this.state.socket.emit(`chat`, {
-                        src: this.state.src,
-                        message:this.state.message,
-                        isPrivate: false
-                    })
-
-                }}>Broadcast Message</button>) : (
-
-
-                    <button onClick={() => {
-
-                        this.state.socket.emit(`chat2`, {
-                            src:this.state.src,
-                            target:this.state.target,
-                            message:this.state.message,
-                            isPrivate: true
-                        })
-
-                    }}>Send Private</button>
-                )
-            }
-
-        </React.Fragment>
+            </React.Fragment>
         )
     }
 }
+

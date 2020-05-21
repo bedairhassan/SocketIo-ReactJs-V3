@@ -6,7 +6,7 @@ const {disconnect,UpdateUser,Intro,localUsersUpdate,Block,Chat,Chat2,fr,Contacti
 
 // App setup
 var app = express();
-var server = app.listen(4000, function () {
+var server = app.listen(4000, ()=> {
     console.log('listening for requests on port 4000,');
 });
 
@@ -20,7 +20,10 @@ var io = socket(server);
 
 io.on('connection', (socket) => { 
 
-    users=Intro(io,socket,users)
+    users=Intro(socket.id,users)
+
+    socket.emit(`what is my socketid`, socket.id)
+    io.emit(`Available Users`, users)
 
     socket.on(`localUsersUpdate`,users=>
     localUsersUpdate(socket,users))
@@ -29,10 +32,10 @@ io.on('connection', (socket) => {
     Block(socket,data))
 
     socket.on(`chat`, user => 
-    Chat(io,user)) 
+    Chat({io,user})) 
 
     socket.on(`chat2`, user => 
-    Chat2(socket,user))
+    Chat2({socket,user}))
 
     socket.on(`fr`, ({ src, target }) => 
     fr(socket,{src,target}))

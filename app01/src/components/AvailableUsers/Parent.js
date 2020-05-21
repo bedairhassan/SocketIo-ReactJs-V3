@@ -6,8 +6,12 @@ import { isBlockedUpdateArray, update_isFriendsTrue, update_SentMe } from '../Av
 
 import Approve from '../AvailableUsers/Approve'
 import BlockButton from '../AvailableUsers/BlockButton'
-import CountDisplay from '../AvailableUsers/CountDisplay'
+// import CountDisplay from '../AvailableUsers/CountDisplay'
 import SendFriendRequestButton from '../AvailableUsers/SendFriendRequestButton'
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import Headers from '../reusable/Headers'
 
 export default class AvailableUsersReactJs extends PureComponent {
 
@@ -16,9 +20,11 @@ export default class AvailableUsersReactJs extends PureComponent {
 
         this.state = {
             socket: props.socket,
-            users: []
+            users: [],
         }
     }
+
+
 
     componentDidMount() {
 
@@ -47,20 +53,20 @@ export default class AvailableUsersReactJs extends PureComponent {
         )
     }
 
+
+
     userDisplay(user) {
 
-        // console.log(user.socketid)
-        // console.log(this.state.socket.id)
         if (user.socketid !== this.state.socket.id) {
 
             const socketid = user.socketid
 
             if (!user.isBlocked) {
                 return (
-                    <tr style={{ fontSize: '10px', color: `red` }}>
+                    <tr>
                         <td>{socketid}</td>
                         <td>
-                            <SendFriendRequestButton 
+                            <SendFriendRequestButton
                                 user={user}
                                 socket={this.state.socket}
                             />
@@ -85,11 +91,6 @@ export default class AvailableUsersReactJs extends PureComponent {
                                 user={user}
                             />
                         </td>
-                        <td>
-                            <CountDisplay
-                                user={user}
-                            />
-                        </td>
 
                     </tr>
                 )
@@ -103,20 +104,19 @@ export default class AvailableUsersReactJs extends PureComponent {
     }
 
     render() {
+
+        const MoreThanOneRecord = this.state.users.length > 1
+
         return (
             <React.Fragment>
                 <div>
-                    <table>
-                        <thead style={{ fontSize: '10px', color: `red` }}>
-                            <th>Socket Id</th>
-                            <th>Friend Request</th>
-                            <th>Approval</th>
-                            <th>Friends ?</th>
-                            <th>Block</th>
-                            <th>Messages Count</th>
-                        </thead>
+                    <table class="table table-striped">
 
-                        {/* tr, multiple td's */}
+                        {
+                            (MoreThanOneRecord) && (
+
+                                <Headers headers={[`Socketid`, `Friend Request`, `Approval`,`Friends ?`, `Block`]} />)
+                        }
 
                         {
                             this.state.users.map(user =>
@@ -129,11 +129,3 @@ export default class AvailableUsersReactJs extends PureComponent {
         )
     }
 }
-
-
-
-//   <RadioButton onClick={data=>console.log(data)} items={[`item1`,`item2`]}/>
-
-
-// {socket,user}
-

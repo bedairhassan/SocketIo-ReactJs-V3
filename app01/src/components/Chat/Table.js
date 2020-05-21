@@ -43,25 +43,7 @@ export default class Table extends React.Component {
 
     this.state.socket.on(`chat`, user => {
 
-      //console.log(new Date(), {
-
-      //   fileName: `Table`,
-      //   event: `chat`,
-      //   action: `object`,
-      //   data: user
-      // })
-
       user = { ...user, date: new Date() + `` }
-    
-
-      //console.log(new Date(), {
-
-      //   fileName: `Table`,
-      //   event: `chat, updated object`,
-      //   action: `object`,
-      //   data: user
-      // })
-
 
       // usersSet(oldUsers => [...oldUsers, user])
       this.setState({ users: [...this.state.users, user] })
@@ -70,13 +52,7 @@ export default class Table extends React.Component {
 
     this.state.socket.on(`chat2`, user => {
 
-      //console.log(new Date(), {
-
-      //   fileName: `Table`,
-      //   event: `chat2`,
-      //   action: `object`,
-      //   data: user
-      // })
+      console.log(new Date(),`chat2`,`displaying user`)
 
       user = { ...user, date: new Date() + `` }
       // 
@@ -85,21 +61,6 @@ export default class Table extends React.Component {
       this.setState({ users: [...this.state.users, user] })
     })
   }
-  // useEffect(() => {
-
-
-  // }, [])
-
-
-  // useEffect(() => 
-  //   // usersSet(oldUsers => [...oldUsers, {...user,date:new Date()}])
-
-  // }), [])
-
-  // TODO: put it in utils ! 
-  // const 
-
-
 
   render() {
     return (

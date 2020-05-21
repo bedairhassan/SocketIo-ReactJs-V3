@@ -6,27 +6,23 @@ import Select from '../reusable/Select'
 // import '
 // import '../../src/App.css';
 import ParentContact from './ParentContact'
-import DisplayMySocket from './DisplayMySocket'
+// import DisplayMySocket from './DisplayMySocket'
+
+import Headers from '../reusable/Headers'
 
 export default function UserData({ socket }) {
 
-  const [user, userSet] = useState({ socketid: -1, whocansendmefr: `everyone` })
+
 
   return (
 
     <center>
 
-      <table style={{ fontSize: '10px' }}>
-        <thead>
-          <th>title</th>
-          <th>value</th>
-        </thead>
+      <table class="table table-striped">
+        <Headers headers={[`title`, `value`]} />
         <tbody>
 
-          <DisplayMySocket
-            socket={socket}
-            returnSocketId={socketid => userSet({ ...user, socketid })} />
-
+          <DisplaySocket socket={socket} />
           <ParentContact socket={socket} />
 
         </tbody>
@@ -35,4 +31,34 @@ export default function UserData({ socket }) {
   )
 }
 
-// export default UserData
+
+
+
+class DisplaySocket extends React.Component {
+
+  constructor(props) {
+
+    super(props)
+
+    this.state = {
+      socket: props.socket,
+      socketid:-1
+    }
+  }
+
+  componentDidMount() {
+    this.state.socket.on(`what is my socketid`, socketid => this.setState({socketid}))
+  }
+
+  render() {
+
+    return (
+      <React.Fragment>
+        <tr>
+          <td>Socket Id</td>
+          <td>{this.state.socketid}</td>
+        </tr>
+      </React.Fragment>
+    )
+  }
+}

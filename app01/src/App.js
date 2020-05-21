@@ -13,45 +13,43 @@ var socket = require('socket.io-client')('http://localhost:4000');
 
 export default function App() {
 
-  const [toDisplay, toDisplaySet] = useState(`Home`)
+
+  // const [buttonHide, buttonHideSet] = useState(true)
 
   useEffect(() => window.addEventListener('beforeunload', e => socket.emit(`disconnect`, { socketid: socket.id })), [])
 
+  // const buttonHideAction = () => 
+
   return (
-    <center>
+    <React.Fragment>
 
-      {/* {true&&true&&<h1>hi</h1>} */}
+      {/* <button onClick={() => buttonHideSet(!buttonHide)}>Hide Settings</button> */}
+      <SideBar
+          // Display={buttonHide}
+          socket={socket} />
+      <MainWindow
+        socket={socket} />
 
-      <div className={`sidenav`}>
-
-        {/* <Contacting socket={socket} /> */}
-        {/* <hr></hr> */}
-        <UserData socket={socket} />
-
-        <hr className="zig-zag"></hr>
-
-        <h1 style={{ fontSize: '10px' }}>Conclusion, Yourself can't be seen in this table</h1>
-        <h1 style={{ fontSize: '10px', color: `red` }}>AVAILABLE USERS</h1>
-        <AvailableUsers socket={socket} />
-      </div>
-
-      <div className={`main`}>
-        <Chat socket={socket} />
-        <br/>
-        <hr></hr>
-        <hr></hr>
-        
-        {/* FIX Friend Request Sent Issue First */}
-        {/* <ChatWindowPrivate socket={socket}/>  */}
-        <ParentChatWindowPrivate socket={socket}/>
-
-      </div>
-
-      <br />
-
-
-
-    </center>
+    </React.Fragment>
   );
 }
 
+const MainWindow = ({ socket }) => {
+  return (
+    <React.Fragment>
+      <Chat socket={socket} />
+    </React.Fragment>
+
+  )
+}
+
+const SideBar = ({ socket }) => {
+
+  return (
+    <React.Fragment>
+      <UserData socket={socket} />
+      <hr className="zig-zag"></hr>
+      <AvailableUsers socket={socket} />
+      <hr className="zig-zag"></hr>
+    </React.Fragment>)
+}

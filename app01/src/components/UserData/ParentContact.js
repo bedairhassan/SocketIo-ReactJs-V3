@@ -29,6 +29,7 @@ export default function Contacting({ socket }) {
 
         <td>
           <button
+          class="btn btn-warning"
             onClick={() => contactingHandle(-1)}>
             E</button>
         </td>

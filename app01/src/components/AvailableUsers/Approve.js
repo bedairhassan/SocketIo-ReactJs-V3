@@ -23,7 +23,8 @@ const Approve = ({ user, src, socket, users }) => {
         <React.Fragment>
             {
                 SentMe === src ?
-                    <button onClick={() => Action()}>Approve</button>
+                    <button onClick={() => Action()}
+                    class="btn btn-primary">Approve</button>
                     : <h6>-</h6>
             }
         </React.Fragment>

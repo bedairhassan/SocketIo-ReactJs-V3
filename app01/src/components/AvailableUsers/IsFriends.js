@@ -1,5 +1,5 @@
 import React from "react"
-import {smallFont} from '../mystyles'
+import { smallFont } from '../mystyles'
 
 export default function IsFriends({ socket, user: { isFriends, socketid } }) {
 
@@ -7,9 +7,9 @@ export default function IsFriends({ socket, user: { isFriends, socketid } }) {
 
     return (
         <React.Fragment >
-            {isFriends ? <button 
-            style={smallFont}
-            onClick={() => socket.emit(`Contacting`, socketid)}>{buttonName}</button> : `false`}
+            {isFriends ? <button
+            class="btn btn-primary"
+                onClick={() => socket.emit(`Contacting`, socketid)}>{buttonName}</button> : `false`}
         </React.Fragment>
     )
 }
