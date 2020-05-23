@@ -1,11 +1,11 @@
+// this covers both private and public messages
+// let's create public version only to test the isseen
+
 import React, { useState, useEffect } from 'react'
 
 // import {availableusers} from '../utils/events'
 
-import { SocketIdsDynamic } from './utils'
 
-import Select from '../reusable/Select'
-import FilterByMessage from './FilterByMessage/FilterByMessage'
 
 import Chat from '../Chat Component/Chat'
 

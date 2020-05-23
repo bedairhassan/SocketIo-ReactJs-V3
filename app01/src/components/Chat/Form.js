@@ -5,7 +5,7 @@ import Button from './Button'
 export default class Form extends React.Component {
     constructor(props) {
         super(props)
-        
+
         this.state = {
             message: `message does not exist`,
             socket: props.socket,
@@ -24,21 +24,25 @@ export default class Form extends React.Component {
     render() {
 
         return (
-            <React.Fragment>
-                
+            <div class="input-group mb-3">
+            
+
                 <Input
-                class="form-control"
+                    className={`form-control`}
                     onChange={message => this.messageSet(message)}
                     placeholder={`enter message`} />
 
-                <Button 
-                socket={this.state.socket}
-                target={this.state.target}
-                message={this.state.message}
-                src={this.state.socket.id}
-                />
 
-            </React.Fragment>
+                <div class="input-group-prepend">
+                    <Button
+                        className={"btn btn-outline-secondary"}
+                        socket={this.state.socket}
+                        target={this.state.target}
+                        message={this.state.message}
+                        src={this.state.socket.id}
+                    />
+                </div>
+            </div>
         )
     }
 }

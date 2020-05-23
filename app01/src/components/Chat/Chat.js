@@ -1,18 +1,20 @@
 import React from 'react'
-import Table from './Table'
 import Form from './Form'
-import ChatWow from './ChatWow'
+import ChatPublic from './ChatPublic'
 
 // input field, button
 // display : table 
 function Chat({socket}) {
 
-    return (
+
+    return ( 
         <React.Fragment>
             <Form socket={socket}/>
             {/* <Table socket={socket}/> */}
             {/* where */}
-            <ChatWow socket={socket}/>
+            {/* <ChatWow socket={socket}/> */}
+            <ChatPublic socket={socket}/>
+
         </React.Fragment>    
     )
 }

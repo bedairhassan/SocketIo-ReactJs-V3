@@ -4,10 +4,9 @@ import './App.css';
 import UserData from './components/UserData/UserData';
 import AvailableUsers from './components/AvailableUsers/Parent';
 // import ConditionalPageDisplay from './components/ConditionalPageDisplay'
-import NavDisplay from './components/NavDisplay';
 
 import Chat from './components/Chat/Chat'
-import ParentChatWindowPrivate from './components/ChatWindowPrivate/Parent'
+
 
 var socket = require('socket.io-client')('http://localhost:4000');
 

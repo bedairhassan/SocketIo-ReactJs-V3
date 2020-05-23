@@ -8,5 +8,6 @@ const {Chat2} = require('./Chat2')
 const {fr} = require('./fr')
 const {Contacting} = require('./Contacting')
 const {letsBeFriends}= require('./letsBeFriends')
+const {ViewedBy}= require('./ViewedBy')
 
-module.exports={disconnect,UpdateUser,Intro,localUsersUpdate,Block,Chat,Chat2,fr,Contacting,letsBeFriends}
+module.exports={disconnect,UpdateUser,Intro,localUsersUpdate,Block,Chat,Chat2,fr,Contacting,letsBeFriends,ViewedBy}

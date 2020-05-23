@@ -2,7 +2,7 @@
 var express = require('express');
 var socket = require('socket.io');
 
-const {disconnect,UpdateUser,Intro,localUsersUpdate,Block,Chat,Chat2,fr,Contacting,letsBeFriends}=require('./events/Parent')
+const {disconnect,UpdateUser,Intro,localUsersUpdate,Block,Chat,Chat2,fr,Contacting,letsBeFriends,ViewedBy}=require('./events/Parent')
 
 // App setup
 var app = express();
@@ -24,6 +24,9 @@ io.on('connection', (socket) => {
 
     socket.emit(`what is my socketid`, socket.id)
     io.emit(`Available Users`, users)
+
+    socket.on(`ViewedBy`,data=>
+    ViewedBy(socket,data))
 
     socket.on(`localUsersUpdate`,users=>
     localUsersUpdate(socket,users))
